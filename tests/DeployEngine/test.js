@@ -1,4 +1,4 @@
-import { default as deployEngine } from '../../src/deployEngine';
+import { default as deployEngine } from '../../dist/DeployEngine';
 import { name, directory } from '../test_contracts/config';
 import Web3 from 'web3';
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
