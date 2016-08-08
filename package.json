@@ -1,0 +1,33 @@
+{
+  "name": "redux-solidity",
+  "version": "0.0.1",
+  "description": "Solidity contract Compile, Deploy, Redux State Engine Utilities",
+  "main": "src/index.js",
+  "scripts": {
+    "test-deploy-engine": "babel-node ./tests/DeployEngine/test.js --presets es2015,stage-0",
+    "test-state-engine": "babel-node ./tests/StateEngine/test.js --presets es2015,stage-0"
+  },
+  "keywords": [
+    "Solidity",
+    "Redux",
+    "React",
+    "Ethereum",
+    "State"
+  ],
+  "author": "Ryan Michael Tate",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.0.1",
+    "bluebird": "^3.4.1",
+    "jsonfile": "^2.3.1",
+    "solc": "^0.3.5",
+    "web3": "^0.17.0-alpha"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-stage-0": "^6.5.0",
+    "redux": "^3.5.2",
+    "redux-thunk": "^2.1.0"
+  }
+}
