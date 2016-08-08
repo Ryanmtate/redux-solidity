@@ -1,6 +1,6 @@
 {
   "name": "redux-solidity",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "Solidity contract Compile, Deploy, Redux State Engine Utilities",
   "main": "src/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "test-state-engine": "babel-node ./tests/StateEngine/test.js --presets es2015,stage-0",
     "transform-deploy": "babel ./src/contractDeployEngine.js --out-file ./src/deployEngine.js --presets es2015,stage-0",
     "transform-state": "babel ./src/contractStateEngine.js --out-file ./src/stateEngine.js --presets es2015,stage-0",
-    "transform" : "npm run transform-deploy && npm run transform-state"
+    "transform" : "npm run transform-state && npm run transform-deploy"
   },
   "keywords": [
     "Solidity",
