@@ -1,5 +1,5 @@
 import Promise from 'bluebird';
-import { default as StateEngine } from '../../dist/StateEngine';
+import { StateEngine } from '../../dist/index';
 import { name, directory } from '../test_contracts/config';
 import Web3 from 'web3';
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));

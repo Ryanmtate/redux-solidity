@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
 import async from 'async';
-import StateEngine from './stateEngine';
+import StateEngine from '../dist/StateEngine';
 import solc from 'solc';
 
 const fs = Promise.promisifyAll(require('fs'));

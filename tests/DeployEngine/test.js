@@ -1,9 +1,11 @@
-import { default as deployEngine } from '../../dist/DeployEngine';
+import { DeployEngine } from '../../dist/index';
 import { name, directory } from '../test_contracts/config';
 import Web3 from 'web3';
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
-let engine = new deployEngine({
+
+
+let engine = new DeployEngine({
   name,
   directory,
   web3,

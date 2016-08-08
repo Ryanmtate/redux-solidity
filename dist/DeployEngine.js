@@ -14,9 +14,9 @@ var _async = require('async');
 
 var _async2 = _interopRequireDefault(_async);
 
-var _stateEngine = require('./stateEngine');
+var _StateEngine2 = require('../dist/StateEngine');
 
-var _stateEngine2 = _interopRequireDefault(_stateEngine);
+var _StateEngine3 = _interopRequireDefault(_StateEngine2);
 
 var _solc = require('solc');
 
@@ -150,6 +150,6 @@ var DeployEngine = function (_StateEngine) {
   }]);
 
   return DeployEngine;
-}(_stateEngine2.default);
+}(_StateEngine3.default);
 
 exports.default = DeployEngine;

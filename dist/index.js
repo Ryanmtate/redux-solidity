@@ -1,5 +1,5 @@
-const DeployEngine = require('./DeployEngine');
-const StateEngine = require('./StateEngine');
+const DeployEngine = require('./DeployEngine').default;
+const StateEngine = require('./StateEngine').default;
 
 module.exports = {
   DeployEngine : DeployEngine,

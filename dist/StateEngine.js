@@ -37,6 +37,10 @@ var StateEngine = function () {
     this.abi = options.abi;
     this.address = options.address;
     this.abi && this.address ? this.contract = this.eth.contract(this.abi).at(this.address) : this.contract = null;
+    this.directory = options.directory;
+    this.compiled = {};
+    this.deployed = {};
+    this.params = options.params;
   }
 
   _createClass(StateEngine, [{
