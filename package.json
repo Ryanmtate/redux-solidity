@@ -2,10 +2,11 @@
   "name": "redux-solidity",
   "version": "0.0.1",
   "description": "Solidity contract Compile, Deploy, Redux State Engine Utilities",
-  "main": "src/index.js",
+  "main": "src/redux-solidity.js",
   "scripts": {
     "test-deploy-engine": "babel-node ./tests/DeployEngine/test.js --presets es2015,stage-0",
-    "test-state-engine": "babel-node ./tests/StateEngine/test.js --presets es2015,stage-0"
+    "test-state-engine": "babel-node ./tests/StateEngine/test.js --presets es2015,stage-0",
+    "transform": "babel ./src/index.js --out-file ./src/redux-solidity.js --presets es2015,stage-0"
   },
   "keywords": [
     "Solidity",
