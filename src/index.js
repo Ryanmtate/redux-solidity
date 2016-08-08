@@ -1,7 +1,7 @@
-import ContractDeployEngine from './contractDeployEngine.js';
-import ContractStateEngine from './contractStateEngine.js';
+const DeployEngine = require('./deployEngine');
+const StateEngine = require('./stateEngine');
 
 module.exports = {
-  deployEngine : ContractDeployEngine,
-  stateEngine : ContractStateEngine
+  DeployEngine : DeployEngine,
+  StateEngine : StateEngine
 }

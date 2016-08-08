@@ -1,13 +1,13 @@
 import Promise from 'bluebird';
 import async from 'async';
-import ContractStateEngine from './contractStateEngine';
+import StateEngine from './contractStateEngine';
 import solc from 'solc';
 
 const fs = Promise.promisifyAll(require('fs'));
 const join = Promise.join;
 const jsonfile = Promise.promisifyAll(require('jsonfile'));
 
-export default class ContractDeployEngine extends ContractStateEngine {
+export default class DeployEngine extends StateEngine {
   constructor(options){
     super(options);
     this.directory = options.directory

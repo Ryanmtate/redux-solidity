@@ -3,7 +3,7 @@ import async from 'async';
 const join = Promise.join;
 const using = Promise.using;
 
-export default class ContractStateEngine {
+export default class StateEngine {
   constructor(options){
     this.eth = Promise.promisifyAll(options['web3']['eth']);
     this.name = options.name;

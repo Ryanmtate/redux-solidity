@@ -1,5 +1,5 @@
 import Promise from 'bluebird';
-import { stateEngine } from '../../src/index';
+import { default as StateEngine } from '../../src/stateEngine';
 import { name, directory } from '../test_contracts/config';
 import Web3 from 'web3';
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
@@ -13,7 +13,7 @@ import thunk from 'redux-thunk';
 
 // Create New ContractStateEngine;
 
-let engine = new stateEngine({
+let engine = new StateEngine({
   name,
   abi : JSON.parse(Contract['interface']),
   address : Contract['txReceipt']['contractAddress'],
