@@ -96,7 +96,7 @@ var StateEngine = function () {
           }
           var type = 'LOG';
           var method = '' + result.event;
-          var action = { type: type, result: result.args, method: method, contract: _this3.name + '@' + _this3.address };
+          var action = { type: type, result: result.args, method: method, contract: _this3.address };
           dispatch(action);
         });
       };
@@ -115,7 +115,7 @@ var StateEngine = function () {
           _bluebird2.default.resolve(logs).map(function (result) {
             var type = 'LOG';
             var method = '' + result.event;
-            var action = { type: type, result: result.args, method: method, contract: _this4.name + '@' + _this4.address };
+            var action = { type: type, result: result.args, method: method, contract: _this4.address };
             dispatch(action);
           }).catch(function (error) {
             throw error;
@@ -216,7 +216,7 @@ var StateEngine = function () {
         }).then(function (txHash) {
           return _this8.getTransactionReceipt(txHash);
         }).then(function (result) {
-          dispatch({ type: type, result: result, method: method, contract: _this8.name + '@' + _this8.address });
+          dispatch({ type: type, result: result, method: method, contract: _this8.address });
         }).catch(function (error) {
           throw error;
         });
@@ -259,7 +259,7 @@ var StateEngine = function () {
             return (_contract$method2 = _this9.contract[method]).callAsync.apply(_contract$method2, _toConsumableArray(params).concat([_this9.sendObject]));
           }
         }).then(function (result) {
-          dispatch({ type: type, result: result, method: method, contract: _this9.name + '@' + _this9.address });
+          dispatch({ type: type, result: result, method: method, contract: _this9.address });
         }).catch(function (error) {
           throw error;
         });
@@ -273,15 +273,15 @@ var StateEngine = function () {
 
       switch (action.type) {
         case 'INIT_STATE':
-          return action.result;
+          return _defineProperty({}, action.contract, action.result);
           break;
         case 'LOG':
-          return _extends({}, state[action.contract], {
+          return _defineProperty({}, action.contract, _extends({}, state[action.contract], {
             'LOGS': _extends({}, state[action.contract]['LOGS'], _defineProperty({}, action.method, [].concat(_toConsumableArray(state[action.contract]['LOGS'][action.method]), [action.result])))
-          });
+          }));
           break;
         case action.type:
-          return _extends({}, state[action.contract], _defineProperty({}, action.method, action.result));
+          return _defineProperty({}, action.contract, _extends({}, state[action.contract], _defineProperty({}, action.method, action.result)));
           break;
         default:
           return state;
@@ -347,7 +347,7 @@ var StateEngine = function () {
         }).then(function (state) {
           State = _extends({}, State, state);
 
-          dispatch({ type: 'INIT_STATE', result: State, contract: _this12.name + '@' + _this12.address });
+          dispatch({ type: 'INIT_STATE', result: State, contract: _this12.address });
         }).catch(function (error) {
           throw error;
         });

@@ -58,7 +58,7 @@ export default class StateEngine {
         if(error){throw error;}
         let type = `LOG`;
         let method = `${result.event}`;
-        let action = {type, result : result.args, method, contract : `${this.name}@${this.address}`}
+        let action = {type, result : result.args, method, contract : this.address}
         dispatch(action);
       });
     }
@@ -72,7 +72,7 @@ export default class StateEngine {
         Promise.resolve(logs).map((result) => {
           let type = `LOG`;
           let method = `${result.event}`;
-          let action = {type, result : result.args, method, contract : `${this.name}@${this.address}`}
+          let action = {type, result : result.args, method, contract : this.address}
           dispatch(action);
         }).catch((error) => {
           throw error;
@@ -160,7 +160,7 @@ export default class StateEngine {
       }).then((txHash) => {
         return this.getTransactionReceipt(txHash);
       }).then((result) => {
-        dispatch({type, result, method, contract : `${this.name}@${this.address}`});
+        dispatch({type, result, method, contract : this.address});
       }).catch((error) => {
         throw error;
       });
@@ -199,7 +199,7 @@ export default class StateEngine {
         }
 
       }).then((result) => {
-        dispatch({type, result, method, contract : `${this.name}@${this.address}`});
+        dispatch({type, result, method, contract : this.address});
       }).catch((error) => {
         throw error;
       });
@@ -209,24 +209,30 @@ export default class StateEngine {
   reducer(state = {}, action) {
     switch(action.type){
       case 'INIT_STATE':
-        return action.result;
+        return {
+          [action.contract] : action.result
+        };
         break;
       case 'LOG':
         return {
-          ...state[action.contract],
-          'LOGS' : {
-            ...state[action.contract]['LOGS'],
-            [action.method] : [
-              ...state[action.contract]['LOGS'][action.method],
-              action.result
-            ]
+          [action.contract] : {
+            ...state[action.contract],
+            'LOGS' : {
+              ...state[action.contract]['LOGS'],
+              [action.method] : [
+                ...state[action.contract]['LOGS'][action.method],
+                action.result
+              ]
+            }
           }
         };
         break;
       case action.type:
         return {
-          ...state[action.contract],
-          [action.method] : action.result
+          [action.contract] : {
+            ...state[action.contract],
+            [action.method] : action.result
+          }
         };
         break
       default:
@@ -287,7 +293,7 @@ export default class StateEngine {
           ...state
         };
 
-        dispatch({type : 'INIT_STATE', result : State, contract : `${this.name}@${this.address}`});
+        dispatch({type : 'INIT_STATE', result : State, contract : this.address});
       }).catch((error) => {
         throw error;
       });
