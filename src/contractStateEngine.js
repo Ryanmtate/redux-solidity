@@ -227,7 +227,10 @@ export default class StateEngine {
         return {
           [action.contract] : {
             ...state[action.contract],
-            [action.method] : action.result
+            [action.method] : [
+              {...state[action.contract][action.method]},
+              action.result
+            ]
           }
         };
         break
