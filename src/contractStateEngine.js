@@ -13,10 +13,6 @@ export default class StateEngine {
     this.abi && this.address ?
       this.contract = this.eth.contract(this.abi).at(this.address) :
       this.contract = null;
-    this.directory = options.directory
-    this.compiled = {};
-    this.deployed = {};
-    this.params = options.params;
   }
 
   abiNames() {
