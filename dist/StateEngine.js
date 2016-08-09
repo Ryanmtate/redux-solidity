@@ -37,10 +37,6 @@ var StateEngine = function () {
     this.abi = options.abi;
     this.address = options.address;
     this.abi && this.address ? this.contract = this.eth.contract(this.abi).at(this.address) : this.contract = null;
-    this.directory = options.directory;
-    this.compiled = {};
-    this.deployed = {};
-    this.params = options.params;
   }
 
   _createClass(StateEngine, [{
@@ -276,15 +272,16 @@ var StateEngine = function () {
           return _defineProperty({}, action.contract, action.result);
           break;
         case 'LOG':
-          return _defineProperty({}, action.contract, _extends({}, state[action.contract], {
-            'LOGS': _extends({}, state[action.contract]['LOGS'], _defineProperty({}, action.method, [].concat(_toConsumableArray(state[action.contract]['LOGS'][action.method]), [action.result])))
+          return _defineProperty({}, action.contract, _extends({}, _state[action.contract], {
+            'LOGS': _extends({}, _state[action.contract]['LOGS'], _defineProperty({}, action.method, [].concat(_toConsumableArray(_state[action.contract]['LOGS'][action.method]), [action.result])))
           }));
           break;
         case action.type:
-          return _defineProperty({}, action.contract, _extends({}, state[action.contract], _defineProperty({}, action.method, [].concat(_toConsumableArray(state[action.contract][action.method]), [action.result]))));
+          var _state = _state || {};
+          return _defineProperty({}, action.contract, _extends({}, _state[action.contract], _defineProperty({}, action.method, [].concat(_toConsumableArray(_state[action.contract][action.method]), [action.result]))));
           break;
         default:
-          return state;
+          return _state;
       }
     }
   }, {

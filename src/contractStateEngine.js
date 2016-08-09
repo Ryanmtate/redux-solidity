@@ -224,6 +224,7 @@ export default class StateEngine {
         };
         break;
       case action.type:
+        let state = state || {};
         return {
           [action.contract] : {
             ...state[action.contract],
