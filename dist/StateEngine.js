@@ -273,15 +273,15 @@ var StateEngine = function () {
 
       switch (action.type) {
         case 'INIT_STATE':
-          return _defineProperty({}, action.contract, action.result);
+          return action.result;
           break;
         case 'LOG':
-          return _defineProperty({}, action.contract, _extends({}, state[action.contract], {
+          return _extends({}, state[action.contract], {
             'LOGS': _extends({}, state[action.contract]['LOGS'], _defineProperty({}, action.method, [].concat(_toConsumableArray(state[action.contract]['LOGS'][action.method]), [action.result])))
-          }));
+          });
           break;
         case action.type:
-          return _defineProperty({}, action.contract, _extends({}, state[action.contract], _defineProperty({}, action.method, action.result)));
+          return _extends({}, state[action.contract], _defineProperty({}, action.method, action.result));
           break;
         default:
           return state;

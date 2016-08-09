@@ -209,30 +209,24 @@ export default class StateEngine {
   reducer(state = {}, action) {
     switch(action.type){
       case 'INIT_STATE':
-        return {
-          [action.contract] : action.result
-        };
+        return action.result;
         break;
       case 'LOG':
         return {
-          [action.contract] : {
-            ...state[action.contract],
-            'LOGS' : {
-              ...state[action.contract]['LOGS'],
-              [action.method] : [
-                ...state[action.contract]['LOGS'][action.method],
-                action.result
-              ]
-            }
+          ...state[action.contract],
+          'LOGS' : {
+            ...state[action.contract]['LOGS'],
+            [action.method] : [
+              ...state[action.contract]['LOGS'][action.method],
+              action.result
+            ]
           }
         };
         break;
       case action.type:
         return {
-          [action.contract] : {
-            ...state[action.contract],
-            [action.method] : action.result
-          }
+          ...state[action.contract],
+          [action.method] : action.result
         };
         break
       default:
