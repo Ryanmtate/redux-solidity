@@ -281,7 +281,7 @@ var StateEngine = function () {
           }));
           break;
         case action.type:
-          return _defineProperty({}, action.contract, _extends({}, state[action.contract], _defineProperty({}, action.method, action.result)));
+          return _defineProperty({}, action.contract, _extends({}, state[action.contract], _defineProperty({}, action.method, [].concat(_toConsumableArray(state[action.contract][action.method]), [action.result]))));
           break;
         default:
           return state;
