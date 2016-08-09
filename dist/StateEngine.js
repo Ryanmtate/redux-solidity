@@ -159,7 +159,9 @@ var StateEngine = function () {
       var _this7 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
-        _this7.eth.getTransactionReceiptAsync(txHash).then(function (txReceipt) {
+        _bluebird2.default.delay(5000).then(function () {
+          return _this7.eth.getTransactionReceiptAsync(txHash);
+        }).then(function (txReceipt) {
           if (!txReceipt) {
             return _this7.getTransactionReceipt(txHash);
           } else {
