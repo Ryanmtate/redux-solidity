@@ -272,16 +272,15 @@ var StateEngine = function () {
           return _defineProperty({}, action.contract, action.result);
           break;
         case 'LOG':
-          return _defineProperty({}, action.contract, _extends({}, _state[action.contract], {
-            'LOGS': _extends({}, _state[action.contract]['LOGS'], _defineProperty({}, action.method, [].concat(_toConsumableArray(_state[action.contract]['LOGS'][action.method]), [action.result])))
+          return _defineProperty({}, action.contract, _extends({}, state[action.contract], {
+            'LOGS': _extends({}, state[action.contract]['LOGS'], _defineProperty({}, action.method, [].concat(_toConsumableArray(state[action.contract]['LOGS'][action.method]), [action.result])))
           }));
           break;
         case action.type:
-          var _state = _state || {};
-          return _defineProperty({}, action.contract, _extends({}, _state[action.contract], _defineProperty({}, action.method, [].concat(_toConsumableArray(_state[action.contract][action.method]), [action.result]))));
+          return _defineProperty({}, action.contract, _extends({}, state[action.contract], _defineProperty({}, action.method, action.result)));
           break;
         default:
-          return _state;
+          return state;
       }
     }
   }, {
