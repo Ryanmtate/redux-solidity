@@ -219,7 +219,7 @@ export default class StateEngine {
               ...state[action.contract]['LOGS'],
               [action.method] : {
                 ...state[action.contract]['LOGS'][action.method],
-                [action.method] : action.result
+                [action.result._id] : action.result // ensure logs always have an _id attribute...
               }
             }
           }

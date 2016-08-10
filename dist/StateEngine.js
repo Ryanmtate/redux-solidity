@@ -275,7 +275,7 @@ var StateEngine = function () {
           break;
         case 'LOG':
           return _defineProperty({}, action.contract, _extends({}, state[action.contract], {
-            'LOGS': _extends({}, state[action.contract]['LOGS'], _defineProperty({}, action.method, _extends({}, state[action.contract]['LOGS'][action.method], _defineProperty({}, action.method, action.result))))
+            'LOGS': _extends({}, state[action.contract]['LOGS'], _defineProperty({}, action.method, _extends({}, state[action.contract]['LOGS'][action.method], _defineProperty({}, action.result._id, action.result))))
           }));
           break;
         case action.type:
