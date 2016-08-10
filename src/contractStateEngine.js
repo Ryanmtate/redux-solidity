@@ -217,10 +217,10 @@ export default class StateEngine {
             ...state[action.contract],
             'LOGS' : {
               ...state[action.contract]['LOGS'],
-              [action.method] : [
+              [action.method] : {
                 ...state[action.contract]['LOGS'][action.method],
-                action.result
-              ]
+                [action.method] : action.result
+              }
             }
           }
         };
