@@ -232,7 +232,7 @@ export default class StateEngine {
             [action.method] : action.result
           }
         };
-        break
+        break;
       default:
         return state;
     }
