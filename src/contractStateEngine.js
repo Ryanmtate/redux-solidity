@@ -59,12 +59,7 @@ export default class StateEngine {
         result['args']['_id'] ?
            null : result['args']['_id'] = this.web3.sha3(`${result} ${new Date()}`);
 
-
         let action = {type, result : result.args, method, contract : this.address}
-
-
-
-        console.log(action);
 
         dispatch(action);
       });
@@ -84,8 +79,6 @@ export default class StateEngine {
              null : result['args']['_id'] = this.web3.sha3(`${result} ${new Date()}`);
 
           let action = {type, result : result.args, method, contract : this.address}
-
-          console.log(action);
 
           dispatch(action);
         }).catch((error) => {

@@ -98,8 +98,6 @@ var StateEngine = function () {
 
           var action = { type: type, result: result.args, method: method, contract: _this3.address };
 
-          console.log(action);
-
           dispatch(action);
         });
       };
@@ -122,8 +120,6 @@ var StateEngine = function () {
             result['args']['_id'] ? null : result['args']['_id'] = _this4.web3.sha3(result + ' ' + new Date());
 
             var action = { type: type, result: result.args, method: method, contract: _this4.address };
-
-            console.log(action);
 
             dispatch(action);
           }).catch(function (error) {
