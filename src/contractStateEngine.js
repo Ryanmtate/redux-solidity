@@ -215,6 +215,7 @@ export default class StateEngine {
         break;
       case 'LOG':
         return {
+          ...state,
           [action.contract] : {
             ...state[action.contract],
             'LOGS' : {
@@ -229,6 +230,7 @@ export default class StateEngine {
         break;
       case action.type:
         return {
+          ...state,
           [action.contract] : {
             ...state[action.contract],
             [action.method] : action.result
