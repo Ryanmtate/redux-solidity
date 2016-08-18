@@ -31,6 +31,7 @@ var StateEngine = function () {
   function StateEngine(options) {
     _classCallCheck(this, StateEngine);
 
+    this.web3 = options.web3;
     this.eth = _bluebird2.default.promisifyAll(options['web3']['eth']);
     this.name = options.name;
     this.sendObject = options.sendObject;
@@ -92,7 +93,13 @@ var StateEngine = function () {
           }
           var type = 'LOG';
           var method = '' + result.event;
+
+          result['args']['_id'] ? null : result['args']['_id'] = _this3.web3.sha3(result + ' ' + new Date());
+
           var action = { type: type, result: result.args, method: method, contract: _this3.address };
+
+          console.log(action);
+
           dispatch(action);
         });
       };
@@ -111,7 +118,13 @@ var StateEngine = function () {
           _bluebird2.default.resolve(logs).map(function (result) {
             var type = 'LOG';
             var method = '' + result.event;
+
+            result['args']['_id'] ? null : result['args']['_id'] = _this4.web3.sha3(result + ' ' + new Date());
+
             var action = { type: type, result: result.args, method: method, contract: _this4.address };
+
+            console.log(action);
+
             dispatch(action);
           }).catch(function (error) {
             throw error;
