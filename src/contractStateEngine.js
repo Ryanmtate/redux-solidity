@@ -207,7 +207,9 @@ export default class StateEngine {
   reducer(state = {}, action) {
     switch(action.type){
       case 'INIT_STATE':
+        state['undefined'] ? state = null : null;
         return {
+          ...state,
           [action.contract] : action.result
         };
         break;
