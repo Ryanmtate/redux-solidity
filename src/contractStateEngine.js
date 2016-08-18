@@ -5,6 +5,7 @@ const using = Promise.using;
 
 export default class StateEngine {
   constructor(options){
+    this.web3 = options.web3;
     this.eth = Promise.promisifyAll(options['web3']['eth']);
     this.name = options.name;
     this.sendObject = options.sendObject;
@@ -54,7 +55,17 @@ export default class StateEngine {
         if(error){throw error;}
         let type = `LOG`;
         let method = `${result.event}`;
+
+        result['args']['_id'] ?
+           null : result['args']['_id'] = this.web3.sha3(`${result} ${new Date()}`);
+
+
         let action = {type, result : result.args, method, contract : this.address}
+
+
+
+        console.log(action);
+
         dispatch(action);
       });
     }
@@ -68,7 +79,14 @@ export default class StateEngine {
         Promise.resolve(logs).map((result) => {
           let type = `LOG`;
           let method = `${result.event}`;
+
+          result['args']['_id'] ?
+             null : result['args']['_id'] = this.web3.sha3(`${result} ${new Date()}`);
+
           let action = {type, result : result.args, method, contract : this.address}
+
+          console.log(action);
+
           dispatch(action);
         }).catch((error) => {
           throw error;

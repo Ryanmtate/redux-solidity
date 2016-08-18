@@ -75,7 +75,7 @@ let TokenBase = new StateEngine({
 });
 
 
-const reducer = combineReducers({ "0xfbd58460b4a9e5dc1be4c63ff2a0149166e66d40" : Exchange.reducer, "0x6ce5f93a6e4baf569f9b20b17d0a2a4cd28b88c0" : TokenBase.reducer});
+const reducer = combineReducers({ "contracts" : Exchange.reducer, "contracts" : TokenBase.reducer});
 const store = createStore(reducer, applyMiddleware(thunk));
 
 
@@ -83,8 +83,10 @@ const store = createStore(reducer, applyMiddleware(thunk));
 store.dispatch(Exchange.initState());
 store.dispatch(TokenBase.initState());
 
+store.dispatch(TokenBase.getEvents());
+store.dispatch(TokenBase.watchEvents());
 
-setTimeout(() => {
+setInterval(() => {
   let _state = store.getState();
-  console.log(_state);
-}, 1000);
+  console.log(JSON.stringify(_state));
+}, 5000);
