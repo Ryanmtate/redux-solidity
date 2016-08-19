@@ -94,7 +94,7 @@ var StateEngine = function () {
           var type = 'LOG';
           var method = '' + result.event;
 
-          result['args']['_id'] ? null : result['args']['_id'] = _this3.web3.sha3(result + ' ' + new Date());
+          result['args']['_id'] ? null : result['args']['_id'] = _this3.web3.sha3('' + result);
 
           var action = { type: type, result: result.args, method: method, contract: _this3.address };
 
@@ -117,7 +117,7 @@ var StateEngine = function () {
             var type = 'LOG';
             var method = '' + result.event;
 
-            result['args']['_id'] ? null : result['args']['_id'] = _this4.web3.sha3(result + ' ' + new Date());
+            result['args']['_id'] ? null : result['args']['_id'] = _this4.web3.sha3('' + result);
 
             var action = { type: type, result: result.args, method: method, contract: _this4.address };
 

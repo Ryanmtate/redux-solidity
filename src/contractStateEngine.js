@@ -57,7 +57,7 @@ export default class StateEngine {
         let method = `${result.event}`;
 
         result['args']['_id'] ?
-           null : result['args']['_id'] = this.web3.sha3(`${result} ${new Date()}`);
+           null : result['args']['_id'] = this.web3.sha3(`${result}`);
 
         let action = {type, result : result.args, method, contract : this.address}
 
@@ -76,7 +76,7 @@ export default class StateEngine {
           let method = `${result.event}`;
 
           result['args']['_id'] ?
-             null : result['args']['_id'] = this.web3.sha3(`${result} ${new Date()}`);
+             null : result['args']['_id'] = this.web3.sha3(`${result}`);
 
           let action = {type, result : result.args, method, contract : this.address}
 
