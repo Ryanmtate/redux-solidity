@@ -94,9 +94,7 @@ var StateEngine = function () {
           var type = 'LOG';
           var method = '' + result.event;
 
-          result['args']['_id'] ? null : result['args']['_id'] = _this3.web3.sha3('' + result);
-
-          var action = { type: type, result: result.args, method: method, contract: _this3.address };
+          var action = { type: type, result: result, method: method, contract: _this3.address };
 
           dispatch(action);
         });
@@ -117,9 +115,7 @@ var StateEngine = function () {
             var type = 'LOG';
             var method = '' + result.event;
 
-            result['args']['_id'] ? null : result['args']['_id'] = _this4.web3.sha3('' + result);
-
-            var action = { type: type, result: result.args, method: method, contract: _this4.address };
+            var action = { type: type, result: result, method: method, contract: _this4.address };
 
             dispatch(action);
           }).catch(function (error) {
@@ -285,7 +281,7 @@ var StateEngine = function () {
           break;
         case 'LOG':
           return _extends({}, state, _defineProperty({}, action.contract, _extends({}, state[action.contract], {
-            'LOGS': _extends({}, state[action.contract]['LOGS'], _defineProperty({}, action.method, _extends({}, state[action.contract]['LOGS'][action.method], _defineProperty({}, action.result._id, action.result))))
+            'LOGS': _extends({}, state[action.contract]['LOGS'], _defineProperty({}, action.method, _extends({}, state[action.contract]['LOGS'][action.method], _defineProperty({}, action.result['transactionHash'], action.result['args']))))
           })));
           break;
         case action.type:

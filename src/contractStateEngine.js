@@ -56,10 +56,7 @@ export default class StateEngine {
         let type = `LOG`;
         let method = `${result.event}`;
 
-        result['args']['_id'] ?
-           null : result['args']['_id'] = this.web3.sha3(`${result}`);
-
-        let action = {type, result : result.args, method, contract : this.address}
+        let action = {type, result, method, contract : this.address}
 
         dispatch(action);
       });
@@ -75,10 +72,7 @@ export default class StateEngine {
           let type = `LOG`;
           let method = `${result.event}`;
 
-          result['args']['_id'] ?
-             null : result['args']['_id'] = this.web3.sha3(`${result}`);
-
-          let action = {type, result : result.args, method, contract : this.address}
+          let action = {type, result, method, contract : this.address}
 
           dispatch(action);
         }).catch((error) => {
@@ -233,7 +227,7 @@ export default class StateEngine {
               ...state[action.contract]['LOGS'],
               [action.method] : {
                 ...state[action.contract]['LOGS'][action.method],
-                [action.result._id] : action.result // ensure logs always have an _id attribute...
+                [action.result['transactionHash']] : action.result['args']
               }
             }
           }
