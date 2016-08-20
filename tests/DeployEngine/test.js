@@ -1,4 +1,4 @@
-import { DeployEngine } from '../../dist/index';
+import DeployEngine from '../../src/contractDeployEngine';
 import { name, directory } from '../test_contracts/config';
 import Web3 from 'web3';
 const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
@@ -22,6 +22,7 @@ let engine = new DeployEngine({
 
 
 engine.deploy().then((deployed) => {
+  console.log(engine.contract);
   return engine.saveDeployed();
 }).then((saved) => {
   console.log(saved);

@@ -128,6 +128,7 @@ var DeployEngine = function (_StateEngine) {
           return _this5.getTransactionReceipt(result['transactionHash']);
         }).then(function (txReceipt) {
           _this5.deployed['txReceipt'] = txReceipt;
+          _this5.contract = _this5.eth.contract(_this5.abi).at(txReceipt['contractAdress']);
           resolve(_this5.deployed);
         }).catch(function (error) {
           reject(error);
