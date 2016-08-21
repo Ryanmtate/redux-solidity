@@ -291,7 +291,13 @@ export default class StateEngine {
         this.abi = JSON.parse(deployed['interface']);
         this.address = deployed['txReceipt']['contractAddress'];
         this.contract = this.eth.contract(this.abi).at(this.address);
-        resolve(this.contract);
+        this.promisify().then((contract) => {
+          this.contract = contract;
+          resolve(this.contract);
+        }).catch((error) => {
+          reject(error);
+        })
+
       }
     });
   }

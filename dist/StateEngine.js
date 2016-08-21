@@ -345,7 +345,12 @@ var StateEngine = function () {
           _this12.abi = JSON.parse(deployed['interface']);
           _this12.address = deployed['txReceipt']['contractAddress'];
           _this12.contract = _this12.eth.contract(_this12.abi).at(_this12.address);
-          resolve(_this12.contract);
+          _this12.promisify().then(function (contract) {
+            _this12.contract = contract;
+            resolve(_this12.contract);
+          }).catch(function (error) {
+            reject(error);
+          });
         }
       });
     }
