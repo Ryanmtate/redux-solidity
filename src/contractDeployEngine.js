@@ -80,7 +80,8 @@ export default class DeployEngine extends StateEngine {
         return this.getTransactionReceipt(result['transactionHash']);
       }).then((txReceipt) => {
         this.deployed['txReceipt'] = txReceipt;
-        this.contract = this.eth.contract(this.abi).at(txReceipt['contractAdress']);
+        this.address = txReceipt['contractAdress'];
+        this.contract = this.eth.contract(this.abi).at(this.address);
         return this.promisify();
       }).then((contract) => {
         this.contract = contract;
