@@ -99,4 +99,18 @@ export default class DeployEngine extends StateEngine {
     });
   }
 
+  initDeployed(deployed) {
+    return new Promise((resolve, reject) => {
+      if(!deployed || deployed['interface'] || deployed['txReceipt']){
+        let error = new Error(`Invalid deployed object provided. Deployed object must have an interface and txReceipt object. Use .deploy() to generate first.`);
+        reject(error);
+      } else {
+        this.abi = JSON.parse(deployed['interface']);
+        this.address = deployed['txReceipt']['contractAddress'];
+        this.contract = this.eth.contract(this.abi).at(this.address);
+        resolve(this.contract);
+      }
+    });
+  }
+
 }
