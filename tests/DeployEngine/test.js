@@ -21,11 +21,21 @@ let engine = new DeployEngine({
 
 
 
-engine.deploy().then((deployed) => {
-  console.log(engine.contract);
-  return engine.saveDeployed();
-}).then((saved) => {
-  console.log(saved);
+// engine.deploy().then((deployed) => {
+//   console.log(engine.contract)
+//   return engine.saveDeployed();
+// }).then((saved) => {
+//   console.log(saved);
+// }).catch((error) => {
+//   console.log(error);
+// });
+
+const deployedCase = require('../test_contracts/Case.deployed.json');
+
+// console.log(deployedCase);
+
+engine.initDeployed(deployedCase).then((contract) => {
+  console.log(contract);
 }).catch((error) => {
   console.log(error);
-});
+})

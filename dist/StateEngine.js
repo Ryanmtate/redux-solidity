@@ -338,7 +338,7 @@ var StateEngine = function () {
       var _this12 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
-        if (!deployed || deployed['interface'] || deployed['txReceipt']) {
+        if (!deployed || !deployed['interface'] || !deployed['txReceipt']) {
           var error = new Error('Invalid deployed object provided. Deployed object must have an interface and txReceipt object. Use .deploy() to generate first.');
           reject(error);
         } else {

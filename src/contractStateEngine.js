@@ -284,7 +284,7 @@ export default class StateEngine {
 
   initDeployed(deployed) {
     return new Promise((resolve, reject) => {
-      if(!deployed || deployed['interface'] || deployed['txReceipt']){
+      if(!deployed || !deployed['interface'] || !deployed['txReceipt']){
         let error = new Error(`Invalid deployed object provided. Deployed object must have an interface and txReceipt object. Use .deploy() to generate first.`);
         reject(error);
       } else {
