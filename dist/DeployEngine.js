@@ -129,7 +129,10 @@ var DeployEngine = function (_StateEngine) {
         }).then(function (txReceipt) {
           _this5.deployed['txReceipt'] = txReceipt;
           _this5.contract = _this5.eth.contract(_this5.abi).at(txReceipt['contractAdress']);
-          resolve(_this5.deployed);
+          return _this5.promisify();
+        }).then(function (contract) {
+          _this5.contract = contract;
+          resolve(_this5.contract);
         }).catch(function (error) {
           reject(error);
         });
