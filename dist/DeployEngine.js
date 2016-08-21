@@ -148,23 +148,6 @@ var DeployEngine = function (_StateEngine) {
         });
       });
     }
-  }, {
-    key: 'initDeployed',
-    value: function initDeployed(deployed) {
-      var _this7 = this;
-
-      return new _bluebird2.default(function (resolve, reject) {
-        if (!deployed || deployed['interface'] || deployed['txReceipt']) {
-          var error = new Error('Invalid deployed object provided. Deployed object must have an interface and txReceipt object. Use .deploy() to generate first.');
-          reject(error);
-        } else {
-          _this7.abi = JSON.parse(deployed['interface']);
-          _this7.address = deployed['txReceipt']['contractAddress'];
-          _this7.contract = _this7.eth.contract(_this7.abi).at(_this7.address);
-          resolve(_this7.contract);
-        }
-      });
-    }
   }]);
 
   return DeployEngine;

@@ -333,25 +333,42 @@ var StateEngine = function () {
       });
     }
   }, {
+    key: 'initDeployed',
+    value: function initDeployed(deployed) {
+      var _this12 = this;
+
+      return new _bluebird2.default(function (resolve, reject) {
+        if (!deployed || deployed['interface'] || deployed['txReceipt']) {
+          var error = new Error('Invalid deployed object provided. Deployed object must have an interface and txReceipt object. Use .deploy() to generate first.');
+          reject(error);
+        } else {
+          _this12.abi = JSON.parse(deployed['interface']);
+          _this12.address = deployed['txReceipt']['contractAddress'];
+          _this12.contract = _this12.eth.contract(_this12.abi).at(_this12.address);
+          resolve(_this12.contract);
+        }
+      });
+    }
+  }, {
     key: 'initState',
     value: function initState() {
-      var _this12 = this;
+      var _this13 = this;
 
       return function (dispatch) {
         var State = new Object();
         State['LOGS'] = {};
-        _bluebird2.default.resolve(_this12.abi).map(function (abi) {
+        _bluebird2.default.resolve(_this13.abi).map(function (abi) {
           if (abi['type'] == 'function') {
             State[abi['name']] = {};
           } else if (abi['type'] == 'event') {
             State['LOGS'][abi['name']] = [];
           }
         }).then(function () {
-          return _this12.getState();
+          return _this13.getState();
         }).then(function (state) {
           State = _extends({}, State, state);
 
-          dispatch({ type: 'INIT_STATE', result: State, contract: _this12.address });
+          dispatch({ type: 'INIT_STATE', result: State, contract: _this13.address });
         }).catch(function (error) {
           throw error;
         });
