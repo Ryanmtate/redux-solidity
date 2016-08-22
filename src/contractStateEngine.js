@@ -91,6 +91,7 @@ export default class StateEngine {
         this.abi = abi;
         this.address = address;
         this.contract = eth.contract(this.abi).at(this.address);
+        this.events = this.contract.allEvents({fromBlock : 0, toBlock : 'latest'});
         resolve(this.contract);
       }
     });
@@ -291,6 +292,7 @@ export default class StateEngine {
         this.abi = JSON.parse(deployed['interface']);
         this.address = deployed['txReceipt']['contractAddress'];
         this.contract = this.eth.contract(this.abi).at(this.address);
+        this.events = this.contract.allEvents({fromBlock : 0, toBlock : 'latest'});
         this.promisify().then((contract) => {
           this.contract = contract;
           resolve(this.contract);

@@ -137,6 +137,7 @@ var StateEngine = function () {
           _this5.abi = abi;
           _this5.address = address;
           _this5.contract = eth.contract(_this5.abi).at(_this5.address);
+          _this5.events = _this5.contract.allEvents({ fromBlock: 0, toBlock: 'latest' });
           resolve(_this5.contract);
         }
       });
@@ -345,6 +346,7 @@ var StateEngine = function () {
           _this12.abi = JSON.parse(deployed['interface']);
           _this12.address = deployed['txReceipt']['contractAddress'];
           _this12.contract = _this12.eth.contract(_this12.abi).at(_this12.address);
+          _this12.events = _this12.contract.allEvents({ fromBlock: 0, toBlock: 'latest' });
           _this12.promisify().then(function (contract) {
             _this12.contract = contract;
             resolve(_this12.contract);
