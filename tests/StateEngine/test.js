@@ -47,7 +47,7 @@ import thunk from 'redux-thunk';
 
 
 const ExchangeContract = `0x1b6b5407af0e6d104457360b321c6fe1d68b7325`;
-const TokenBaseContract = `0x6ce5f93a6e4baf569f9b20b17d0a2a4cd28b88c0`; // This contract is just a default token-- not necessary in production
+const CasesContract = `0x6ce5f93a6e4baf569f9b20b17d0a2a4cd28b88c0`; // This contract is just a default token-- not necessary in production
 
 
 let TokenExchange = new StateEngine({
@@ -62,10 +62,10 @@ let TokenExchange = new StateEngine({
     }
   });
 
-let TokenBase = new StateEngine({
-    name : `TokenBase`,
+let Cases = new StateEngine({
+    name : `Cases`,
     abi : [{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"value","type":"uint256"}],"name":"approve","outputs":[{"name":"ok","type":"bool"}],"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"supply","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"ok","type":"bool"}],"type":"function"},{"constant":true,"inputs":[{"name":"who","type":"address"}],"name":"balanceOf","outputs":[{"name":"value","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transfer","outputs":[{"name":"ok","type":"bool"}],"type":"function"},{"constant":true,"inputs":[{"name":"owner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"_allowance","type":"uint256"}],"type":"function"},{"inputs":[{"name":"initial_balance","type":"uint256"}],"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"}],
-    address : TokenBaseContract,
+    address : CasesContract,
     web3,
     sendObject : {
       from : web3.eth.accounts[0],
@@ -75,7 +75,7 @@ let TokenBase = new StateEngine({
   });
 
 
-const reducer = combineReducers({ "contracts" : TokenExchange.reducer, "contracts" : TokenBase.reducer});
+const reducer = combineReducers({ "contracts" : Cases.reducer});
 const store = createStore(reducer, applyMiddleware(thunk));
 
 

@@ -162,6 +162,7 @@ export default class StateEngine {
         }
 
       }).then((txHash) => {
+        dispatch({type, result : txHash, method, contract : this.address});
         return this.getTransactionReceipt(txHash);
       }).then((result) => {
         dispatch({type, result, method, contract : this.address});
