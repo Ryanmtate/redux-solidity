@@ -59,9 +59,11 @@ var DeployEngine = function (_StateEngine) {
       return new _bluebird2.default(function (resolve, reject) {
         var sources = new Object();
         fs.readdirAsync(_this2.directory + '/src').map(function (file) {
-          return join(file, fs.readFileAsync(_this2.directory + '/src/' + file, 'utf-8'), function (file, src) {
-            sources[file] = src;
-          });
+          if (file.match(RegExp(".sol"))) {
+            return join(file, fs.readFileAsync(_this2.directory + '/src/' + file, 'utf-8'), function (file, src) {
+              sources[file] = src;
+            });
+          }
         }).then(function () {
           return _solc2.default.compile({ sources: sources }, 1);
         }).then(function (compiled) {
