@@ -38,6 +38,7 @@ var StateEngine = function () {
     this.abi = options.abi;
     this.address = options.address;
     this.abi && this.address ? this.contract = this.eth.contract(this.abi).at(this.address) : this.contract = null;
+    this.contract ? this.events = this.contract.allEvents({ fromBlock: 0, toBlock: 'latest' }) : null;
   }
 
   _createClass(StateEngine, [{
