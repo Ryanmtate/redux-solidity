@@ -137,7 +137,7 @@ var StateEngine = function () {
         } else {
           _this5.abi = abi;
           _this5.address = address;
-          _this5.contract = eth.contract(_this5.abi).at(_this5.address);
+          _this5.contract = _this5.eth.contract(_this5.abi).at(_this5.address);
           _this5.events = _this5.contract.allEvents({ fromBlock: 0, toBlock: 'latest' });
           resolve(_this5.contract);
         }
