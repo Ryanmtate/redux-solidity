@@ -95,7 +95,12 @@ export default class StateEngine {
         this.address = address;
         this.contract = this.eth.contract(this.abi).at(this.address);
         this.events = this.contract.allEvents({fromBlock : 0, toBlock : 'latest'});
-        resolve(this.contract);
+        this.promisify().then((contract) => {
+          this.contract = contract;
+          resolve(this.contract);
+        }).catch((error) => {
+          reject(error);
+        });
       }
     });
   }
