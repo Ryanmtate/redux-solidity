@@ -22,7 +22,6 @@ let engine = new DeployEngine({
 
 
 engine.deploy().then((deployed) => {
-  console.log(engine.contract)
   return engine.saveDeployed();
 }).then((saved) => {
   console.log(saved);

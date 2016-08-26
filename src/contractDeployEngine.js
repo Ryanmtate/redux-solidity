@@ -96,16 +96,14 @@ export default class DeployEngine extends StateEngine {
 
   saveDeployed() {
     return new Promise((resolve, reject) => {
-      fs.existsAsync(`${this.directory}/deployed`).then((exists) => {
+      Promise.resolve(fs.existsSync(`${this.directory}/deployed/`)).then((exists) => {
         if(!exists){
-          fs.mkdirSync(`${this.directory}/deployed`);
+          return fs.mkdirAsync(`${this.directory}/deployed/`);
+        } else {
+          return true;
         }
-
-        return jsonfile.writeFileAsync(
-          `${this.directory}/deployed/${this.name}.deployed.json`,
-          this.deployed
-        );
-
+      }).then(() => {
+        return jsonfile.writeFileAsync(`${this.directory}/deployed/${this.name}.deployed.json`,this.deployed);
       }).then(() => {
         resolve(true);
       }).catch((error) => {
