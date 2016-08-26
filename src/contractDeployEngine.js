@@ -96,7 +96,7 @@ export default class DeployEngine extends StateEngine {
 
   saveDeployed() {
     return new Promise((resolve, reject) => {
-      jsonfile.writeFileAsync(`${this.directory}/${this.name}.deployed.json`, this.deployed).then(() => {
+      jsonfile.writeFileAsync(`${this.directory}/deployed/${this.name}.deployed.json`, this.deployed).then(() => {
         resolve(true);
       }).catch((error) => {
         reject(error);
