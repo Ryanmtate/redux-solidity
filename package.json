@@ -1,6 +1,6 @@
 {
   "name": "redux-solidity",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Solidity contract Compile, Deploy, Redux State Engine Utilities",
   "main": "dist/index.js",
   "scripts": {

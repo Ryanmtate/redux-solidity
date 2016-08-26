@@ -147,7 +147,13 @@ var DeployEngine = function (_StateEngine) {
       var _this6 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
-        jsonfile.writeFileAsync(_this6.directory + '/deployed/' + _this6.name + '.deployed.json', _this6.deployed).then(function () {
+        fs.existsAsync(_this6.directory + '/deployed').then(function (exists) {
+          if (!exists) {
+            fs.mkdirSync(_this6.directory + '/deployed');
+          }
+
+          return jsonfile.writeFileAsync(_this6.directory + '/deployed/' + _this6.name + '.deployed.json', _this6.deployed);
+        }).then(function () {
           resolve(true);
         }).catch(function (error) {
           reject(error);
