@@ -151,7 +151,6 @@ var DeployEngine = function (_StateEngine) {
           if (!exists) {
             return fs.mkdirAsync(_this6.directory + '/deployed/');
           } else {
-            console.log('Will this call?');
             return true;
           }
         }).then(function () {
