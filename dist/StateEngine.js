@@ -224,10 +224,10 @@ var StateEngine = function () {
             return (_contract$method = _this8.contract[method]).sendTransactionAsync.apply(_contract$method, _toConsumableArray(params).concat([_this8.sendObject]));
           }
         }).then(function (txHash) {
-          dispatch({ type: type, result: txHash, method: method, contract: _this8.address });
+          dispatch({ type: type, result: txHash, method: '_' + method, contract: _this8.address });
           return _this8.getTransactionReceipt(txHash);
         }).then(function (result) {
-          dispatch({ type: type, result: result, method: method, contract: _this8.address });
+          dispatch({ type: type, result: result, method: '_' + method, contract: _this8.address });
         }).catch(function (error) {
           throw error;
         });
@@ -270,7 +270,7 @@ var StateEngine = function () {
             return (_contract$method2 = _this9.contract[method]).callAsync.apply(_contract$method2, _toConsumableArray(params).concat([_this9.sendObject]));
           }
         }).then(function (result) {
-          dispatch({ type: type, result: result, method: method, contract: _this9.address });
+          dispatch({ type: type, result: result, method: '_' + method, contract: _this9.address });
         }).catch(function (error) {
           throw error;
         });

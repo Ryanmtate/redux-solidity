@@ -170,10 +170,10 @@ export default class StateEngine {
         }
 
       }).then((txHash) => {
-        dispatch({type, result : txHash, method, contract : this.address});
+        dispatch({type, result : txHash, method : `_${method}`, contract : this.address});
         return this.getTransactionReceipt(txHash);
       }).then((result) => {
-        dispatch({type, result, method, contract : this.address});
+        dispatch({type, result, method : `_${method}`, contract : this.address});
       }).catch((error) => {
         throw error;
       });
@@ -212,7 +212,7 @@ export default class StateEngine {
         }
 
       }).then((result) => {
-        dispatch({type, result, method, contract : this.address});
+        dispatch({type, result, method : `_${method}`, contract : this.address});
       }).catch((error) => {
         throw error;
       });
