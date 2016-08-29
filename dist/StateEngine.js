@@ -43,12 +43,6 @@ var StateEngine = function () {
   }
 
   _createClass(StateEngine, [{
-    key: 'setDeployedBlockNumber',
-    value: function setDeployedBlockNumber(blockNumber) {
-      this.deployedBlockNumber = blockNumber;
-      return;
-    }
-  }, {
     key: 'abiNames',
     value: function abiNames() {
       var _this = this;
@@ -359,6 +353,7 @@ var StateEngine = function () {
         } else {
           _this12.abi = JSON.parse(deployed['interface']);
           _this12.address = deployed['txReceipt']['contractAddress'];
+          _this12.deployedBlockNumber = deployed['txReceipt']['blockNumber'];
           _this12.contract = _this12.eth.contract(_this12.abi).at(_this12.address);
           _this12.events = _this12.contract.allEvents({ fromBlock: 0, toBlock: 'latest' });
           _this12.promisify().then(function (contract) {

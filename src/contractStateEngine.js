@@ -20,10 +20,6 @@ export default class StateEngine {
       null;
   }
 
-  setDeployedBlockNumber(blockNumber) {
-    this.deployedBlockNumber = blockNumber;
-    return;
-  }
 
   abiNames() {
     return new Promise((resolve, reject) => {
@@ -306,6 +302,7 @@ export default class StateEngine {
       } else {
         this.abi = JSON.parse(deployed['interface']);
         this.address = deployed['txReceipt']['contractAddress'];
+        this.deployedBlockNumber = deployed['txReceipt']['blockNumber'];
         this.contract = this.eth.contract(this.abi).at(this.address);
         this.events = this.contract.allEvents({fromBlock : 0, toBlock : 'latest'});
         this.promisify().then((contract) => {
