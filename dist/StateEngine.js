@@ -37,11 +37,18 @@ var StateEngine = function () {
     this.sendObject = options.sendObject;
     this.abi = options.abi;
     this.address = options.address;
+    this.deployedBlockNumber = null;
     this.abi && this.address ? this.contract = this.eth.contract(this.abi).at(this.address) : this.contract = null;
     this.contract ? this.events = this.contract.allEvents({ fromBlock: 0, toBlock: 'latest' }) : null;
   }
 
   _createClass(StateEngine, [{
+    key: 'setDeployedBlockNumber',
+    value: function setDeployedBlockNumber(blockNumber) {
+      this.deployedBlockNumber = blockNumber;
+      return;
+    }
+  }, {
     key: 'abiNames',
     value: function abiNames() {
       var _this = this;
