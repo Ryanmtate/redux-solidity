@@ -11,12 +11,12 @@ export default class StateEngine {
     this.sendObject = options.sendObject;
     this.abi = options.abi;
     this.address = options.address;
-    this.deployedBlockNumber = null;
+    this.deployedBlockNumber = options.deployedBlockNumber || 0;
     this.abi && this.address ?
       this.contract = this.eth.contract(this.abi).at(this.address):
       this.contract = null;
     this.contract ?
-      this.events = this.contract.allEvents({fromBlock : 0, toBlock : 'latest'}) :
+      this.events = this.contract.allEvents({fromBlock : this.deployedBlockNumber, toBlock : 'latest'}) :
       null;
   }
 
@@ -55,7 +55,7 @@ export default class StateEngine {
 
   watchEvents() {
     return (dispatch) => {
-      this.events = this.contract.allEvents({fromBlock : 0, toBlock : 'latest'});
+      this.events = this.contract.allEvents({fromBlock : this.deployedBlockNumber, toBlock : 'latest'});
       this.events.watch((error, result) => {
         if(error){throw error;}
         let type = `LOG`;
@@ -70,7 +70,7 @@ export default class StateEngine {
 
   getEvents() {
     return (dispatch) => {
-      this.events = this.contract.allEvents({fromBlock : 0, toBlock : 'latest'});
+      this.events = this.contract.allEvents({fromBlock : this.deployedBlockNumber, toBlock : 'latest'});
       this.events.get((error, logs) => {
         if(error){throw error;}
         Promise.resolve(logs).map((result) => {
@@ -96,7 +96,7 @@ export default class StateEngine {
         this.abi = abi;
         this.address = address;
         this.contract = this.eth.contract(this.abi).at(this.address);
-        this.events = this.contract.allEvents({fromBlock : 0, toBlock : 'latest'});
+        this.events = this.contract.allEvents({fromBlock : this.deployedBlockNumber, toBlock : 'latest'});
         this.promisify().then((contract) => {
           this.contract = contract;
           resolve(this.contract);
@@ -304,7 +304,7 @@ export default class StateEngine {
         this.address = deployed['txReceipt']['contractAddress'];
         this.deployedBlockNumber = deployed['txReceipt']['blockNumber'];
         this.contract = this.eth.contract(this.abi).at(this.address);
-        this.events = this.contract.allEvents({fromBlock : 0, toBlock : 'latest'});
+        this.events = this.contract.allEvents({fromBlock : this.deployedBlockNumber, toBlock : 'latest'});
         this.promisify().then((contract) => {
           this.contract = contract;
           resolve(this.contract);

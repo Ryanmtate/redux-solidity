@@ -37,9 +37,9 @@ var StateEngine = function () {
     this.sendObject = options.sendObject;
     this.abi = options.abi;
     this.address = options.address;
-    this.deployedBlockNumber = null;
+    this.deployedBlockNumber = options.deployedBlockNumber || 0;
     this.abi && this.address ? this.contract = this.eth.contract(this.abi).at(this.address) : this.contract = null;
-    this.contract ? this.events = this.contract.allEvents({ fromBlock: 0, toBlock: 'latest' }) : null;
+    this.contract ? this.events = this.contract.allEvents({ fromBlock: this.deployedBlockNumber, toBlock: 'latest' }) : null;
   }
 
   _createClass(StateEngine, [{
@@ -88,7 +88,7 @@ var StateEngine = function () {
       var _this3 = this;
 
       return function (dispatch) {
-        _this3.events = _this3.contract.allEvents({ fromBlock: 0, toBlock: 'latest' });
+        _this3.events = _this3.contract.allEvents({ fromBlock: _this3.deployedBlockNumber, toBlock: 'latest' });
         _this3.events.watch(function (error, result) {
           if (error) {
             throw error;
@@ -108,7 +108,7 @@ var StateEngine = function () {
       var _this4 = this;
 
       return function (dispatch) {
-        _this4.events = _this4.contract.allEvents({ fromBlock: 0, toBlock: 'latest' });
+        _this4.events = _this4.contract.allEvents({ fromBlock: _this4.deployedBlockNumber, toBlock: 'latest' });
         _this4.events.get(function (error, logs) {
           if (error) {
             throw error;
@@ -139,7 +139,7 @@ var StateEngine = function () {
           _this5.abi = abi;
           _this5.address = address;
           _this5.contract = _this5.eth.contract(_this5.abi).at(_this5.address);
-          _this5.events = _this5.contract.allEvents({ fromBlock: 0, toBlock: 'latest' });
+          _this5.events = _this5.contract.allEvents({ fromBlock: _this5.deployedBlockNumber, toBlock: 'latest' });
           _this5.promisify().then(function (contract) {
             _this5.contract = contract;
             resolve(_this5.contract);
@@ -355,7 +355,7 @@ var StateEngine = function () {
           _this12.address = deployed['txReceipt']['contractAddress'];
           _this12.deployedBlockNumber = deployed['txReceipt']['blockNumber'];
           _this12.contract = _this12.eth.contract(_this12.abi).at(_this12.address);
-          _this12.events = _this12.contract.allEvents({ fromBlock: 0, toBlock: 'latest' });
+          _this12.events = _this12.contract.allEvents({ fromBlock: _this12.deployedBlockNumber, toBlock: 'latest' });
           _this12.promisify().then(function (contract) {
             _this12.contract = contract;
             resolve(_this12.contract);
