@@ -118,6 +118,7 @@ var DeployEngine = function (_StateEngine) {
           _this5.deployed = compiled['contracts'][_this5.name];
           _this5.abi = JSON.parse(compiled['contracts'][_this5.name]['interface']);
           _this5.bytecode = compiled['contracts'][_this5.name]['bytecode'];
+          console.log(_this5.bytecode);
           return _this5.eth.contract(_this5.abi);
         }).then(function (contract) {
           _this5.sendObject['data'] = _this5.bytecode;

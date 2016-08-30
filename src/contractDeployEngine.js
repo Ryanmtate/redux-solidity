@@ -70,6 +70,7 @@ export default class DeployEngine extends StateEngine {
         this.deployed = compiled['contracts'][this.name];
         this.abi = JSON.parse(compiled['contracts'][this.name]['interface']);
         this.bytecode = compiled['contracts'][this.name]['bytecode'];
+        console.log(this.bytecode);
         return this.eth.contract(this.abi);
       }).then((contract) => {
         this.sendObject['data'] = this.bytecode;
