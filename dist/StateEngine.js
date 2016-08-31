@@ -230,7 +230,7 @@ var StateEngine = function () {
         }).then(function (result) {
           dispatch({ type: type, result: result, method: '_' + method, contract: _this8.address });
         }).catch(function (error) {
-          throw error;
+          dispatch({ type: type, result: error, method: '_' + method, contract: _this8.address });
         });
       };
     }

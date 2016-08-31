@@ -177,7 +177,7 @@ export default class StateEngine {
       }).then((result) => {
         dispatch({type, result, method : `_${method}`, contract : this.address});
       }).catch((error) => {
-        throw error;
+        dispatch({type, result : error, method : `_${method}`, contract : this.address});
       });
     }
   }
