@@ -176,6 +176,9 @@ export default class StateEngine {
         return this.getTransactionReceipt(txHash);
       }).then((result) => {
         dispatch({type, result, method : `_${method}`, contract : this.address});
+        return Promise.delay(15000);
+      }).then(() => {
+        dispatch({type, result : undefined, method : `_${method}`, contract : this.address});
       }).catch((error) => {
         dispatch({type, result : error, method : `_${method}`, contract : this.address});
       });

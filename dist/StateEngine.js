@@ -229,6 +229,9 @@ var StateEngine = function () {
           return _this8.getTransactionReceipt(txHash);
         }).then(function (result) {
           dispatch({ type: type, result: result, method: '_' + method, contract: _this8.address });
+          return _bluebird2.default.delay(15000);
+        }).then(function () {
+          dispatch({ type: type, result: undefined, method: '_' + method, contract: _this8.address });
         }).catch(function (error) {
           dispatch({ type: type, result: error, method: '_' + method, contract: _this8.address });
         });
