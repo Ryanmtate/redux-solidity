@@ -48,6 +48,7 @@ var DeployEngine = function (_StateEngine) {
     _this.compiled = {};
     _this.deployed = {};
     _this.params = options.params;
+    _this.libraries = options.libraries || {};
     return _this;
   }
 
@@ -117,11 +118,12 @@ var DeployEngine = function (_StateEngine) {
         _this5.compile().then(function (compiled) {
           _this5.deployed = compiled['contracts'][_this5.name];
           _this5.abi = JSON.parse(compiled['contracts'][_this5.name]['interface']);
-          _this5.bytecode = compiled['contracts'][_this5.name]['bytecode'];
-          console.log(_this5.bytecode);
+          return _this5.linkBytecode(compiled['contracts'][_this5.name]['bytecode']);
+        }).then(function (bytecode) {
+          _this5.bytecode = bytecode;
+          _this5.sendObject['data'] = _this5.bytecode;
           return _this5.eth.contract(_this5.abi);
         }).then(function (contract) {
-          _this5.sendObject['data'] = _this5.bytecode;
           if (typeof _this5.params == 'undefined' || _this5.params.length == 0) {
             return contract.new(_this5.sendObject);
           } else {
@@ -131,7 +133,11 @@ var DeployEngine = function (_StateEngine) {
           return _this5.getTransactionReceipt(result['transactionHash']);
         }).then(function (txReceipt) {
           _this5.deployed['txReceipt'] = txReceipt;
-          _this5.address = txReceipt['contractAdress'];
+          _this5.deployed['bytecode'] = _this5.bytecode;
+          _this5.deployed['runtimeBytecode'] = _this5.bytecode;
+          _this5.address = txReceipt['contractAddress'];
+          return _this5.saveDeployed();
+        }).then(function (saved) {
           _this5.contract = _this5.eth.contract(_this5.abi).at(_this5.address);
           return _this5.promisify();
         }).then(function (contract) {
@@ -144,10 +150,12 @@ var DeployEngine = function (_StateEngine) {
     }
   }, {
     key: 'saveDeployed',
-    value: function saveDeployed() {
+    value: function saveDeployed(name, deployed) {
       var _this6 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
+        var Deployed = deployed || _this6.deployed;
+        var Name = name || _this6.name;
         _bluebird2.default.resolve(fs.existsSync(_this6.directory + '/deployed/')).then(function (exists) {
           if (!exists) {
             return fs.mkdirAsync(_this6.directory + '/deployed/');
@@ -155,9 +163,90 @@ var DeployEngine = function (_StateEngine) {
             return true;
           }
         }).then(function () {
-          return jsonfile.writeFileAsync(_this6.directory + '/deployed/' + _this6.name + '.deployed.json', _this6.deployed);
+          return jsonfile.writeFileAsync(_this6.directory + '/deployed/' + Name + '.deployed.json', Deployed);
         }).then(function () {
           resolve(true);
+        }).catch(function (error) {
+          reject(error);
+        });
+      });
+    }
+  }, {
+    key: 'linkBytecode',
+    value: function linkBytecode(bytecode) {
+      var _this7 = this;
+
+      return new _bluebird2.default(function (resolve, reject) {
+        var lib = bytecode.match(RegExp("__"));
+        if (!bytecode) {
+          var error = new Error('Invalid Bytecode.');
+        } else if (!lib) {
+          _this7.bytecode = bytecode;
+          resolve(_this7.bytecode);
+        } else {
+          _this7.deployAndReplace(lib).then(function (bytecode) {
+            _this7.bytecode = bytecode;
+            resolve(bytecode);
+          }).catch(function (error) {
+            reject(error);
+          });
+        }
+      });
+    }
+  }, {
+    key: 'deployAndReplace',
+    value: function deployAndReplace(lib) {
+      var _this8 = this;
+
+      return new _bluebird2.default(function (resolve, reject) {
+        var index = lib['index'];
+        var bytecode = lib['input'];
+        var placeholder = bytecode.slice(index, index + 40);
+        _this8.findAndDeployLibrary(placeholder).then(function (libraries) {
+          _this8.bytecode = _solc2.default.linkBytecode(bytecode, libraries);
+          return _this8.linkBytecode(_this8.bytecode);
+        }).then(function (bytecode) {
+          resolve(bytecode);
+        }).catch(function (error) {
+          reject(error);
+        });
+      });
+    }
+  }, {
+    key: 'findAndDeployLibrary',
+    value: function findAndDeployLibrary(placeholder) {
+      var _this9 = this;
+
+      return new _bluebird2.default(function (resolve, reject) {
+        var library = void 0;
+        var deployed = void 0;
+        fs.readdirAsync(_this9.directory + '/src').map(function (file) {
+          var target = file.replace('.sol', '');
+          var m = placeholder.match(new RegExp(target));
+          if (m) {
+            library = target;
+          }
+        }).then(function () {
+          if (!library) {
+            var error = new Error('Library was not found in source folder!!');
+            reject(error);
+          } else {
+            deployed = _this9.compiled['contracts'][library];
+            var abi = JSON.parse(_this9.compiled['contracts'][library].interface);
+            var bytecode = _this9.compiled['contracts'][library]['bytecode'];
+            var contract = _this9.eth.contract(abi);
+            _this9.sendObject['data'] = bytecode;
+
+            return contract.new(_this9.sendObject);
+          }
+        }).then(function (contract) {
+          return _this9.getTransactionReceipt(contract['transactionHash']);
+        }).then(function (txReceipt) {
+          deployed['txReceipt'] = txReceipt;
+          return _this9.saveDeployed(library, deployed);
+        }).then(function (saved) {
+          _this9.libraries[library] = deployed['txReceipt']['contractAddress'];
+          resolve(_this9.libraries);
         }).catch(function (error) {
           reject(error);
         });

@@ -14,6 +14,7 @@ export default class DeployEngine extends StateEngine {
     this.compiled = {};
     this.deployed = {};
     this.params = options.params;
+    this.libraries = options.libraries || {};
   }
 
   compile() {
@@ -69,11 +70,12 @@ export default class DeployEngine extends StateEngine {
       this.compile().then((compiled) => {
         this.deployed = compiled['contracts'][this.name];
         this.abi = JSON.parse(compiled['contracts'][this.name]['interface']);
-        this.bytecode = compiled['contracts'][this.name]['bytecode'];
-        console.log(this.bytecode);
+        return this.linkBytecode(compiled['contracts'][this.name]['bytecode']);
+      }).then((bytecode) => {
+        this.bytecode = bytecode;
+        this.sendObject['data'] = this.bytecode;
         return this.eth.contract(this.abi);
       }).then((contract) => {
-        this.sendObject['data'] = this.bytecode;
         if(typeof this.params == 'undefined' || this.params.length == 0){
           return contract.new(this.sendObject);
         } else {
@@ -83,7 +85,11 @@ export default class DeployEngine extends StateEngine {
         return this.getTransactionReceipt(result['transactionHash']);
       }).then((txReceipt) => {
         this.deployed['txReceipt'] = txReceipt;
-        this.address = txReceipt['contractAdress'];
+        this.deployed['bytecode'] = this.bytecode;
+        this.deployed['runtimeBytecode'] = this.bytecode;
+        this.address = txReceipt['contractAddress'];
+        return this.saveDeployed();
+      }).then((saved) => {
         this.contract = this.eth.contract(this.abi).at(this.address);
         return this.promisify();
       }).then((contract) => {
@@ -95,8 +101,10 @@ export default class DeployEngine extends StateEngine {
     })
   }
 
-  saveDeployed() {
+  saveDeployed(name, deployed) {
     return new Promise((resolve, reject) => {
+      let Deployed = deployed || this.deployed;
+      let Name = name || this.name;
       Promise.resolve(fs.existsSync(`${this.directory}/deployed/`)).then((exists) => {
         if(!exists){
           return fs.mkdirAsync(`${this.directory}/deployed/`);
@@ -104,7 +112,7 @@ export default class DeployEngine extends StateEngine {
           return true;
         }
       }).then(() => {
-        return jsonfile.writeFileAsync(`${this.directory}/deployed/${this.name}.deployed.json`,this.deployed);
+        return jsonfile.writeFileAsync(`${this.directory}/deployed/${Name}.deployed.json`, Deployed);
       }).then(() => {
         resolve(true);
       }).catch((error) => {
@@ -113,5 +121,78 @@ export default class DeployEngine extends StateEngine {
 
     });
   }
+
+  linkBytecode(bytecode) {
+    return new Promise((resolve, reject) => {
+      let lib = bytecode.match(RegExp("__"));
+      if(!bytecode){
+        let error = new Error('Invalid Bytecode.');
+      } else if(!lib){
+        this.bytecode = bytecode;
+        resolve(this.bytecode);
+      } else {
+        this.deployAndReplace(lib).then((bytecode) => {
+          this.bytecode = bytecode;
+          resolve(bytecode);
+        }).catch((error) => {
+          reject(error);
+        });
+      }
+    });
+  }
+
+  deployAndReplace(lib) {
+    return new Promise((resolve, reject) => {
+      let index = lib['index'];
+      let bytecode = lib['input'];
+      let placeholder = bytecode.slice(index, index+40);
+      this.findAndDeployLibrary(placeholder).then((libraries) => {
+        this.bytecode = solc.linkBytecode(bytecode, libraries);
+        return this.linkBytecode(this.bytecode);
+      }).then((bytecode) => {
+        resolve(bytecode);
+      }).catch((error) => {
+        reject(error);
+      })
+    })
+  }
+
+  findAndDeployLibrary(placeholder) {
+    return new Promise((resolve, reject) => {
+      let library;
+      let deployed;
+      fs.readdirAsync(`${this.directory}/src`).map((file) => {
+        let target = file.replace('.sol', '');
+        let m = placeholder.match(new RegExp(target))
+        if(m){
+          library = target;
+        }
+      }).then(() => {
+        if(!library){
+          let error = new Error('Library was not found in source folder!!');
+          reject(error);
+        } else {
+          deployed = this.compiled['contracts'][library];
+          let abi = JSON.parse(this.compiled['contracts'][library].interface);
+          let bytecode = this.compiled['contracts'][library]['bytecode'];
+          let contract = this.eth.contract(abi);
+          this.sendObject['data'] = bytecode;
+
+          return contract.new(this.sendObject);
+        }
+      }).then((contract) => {
+        return this.getTransactionReceipt(contract['transactionHash']);
+      }).then((txReceipt) => {
+        deployed['txReceipt'] = txReceipt;
+        return this.saveDeployed(library, deployed);
+      }).then((saved) => {
+        this.libraries[library] = deployed['txReceipt']['contractAddress'];
+        resolve(this.libraries);
+      }).catch((error) => {
+        reject(error);
+      });
+    })
+  }
+
 
 }

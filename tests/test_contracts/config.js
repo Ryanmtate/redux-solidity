@@ -1,4 +1,4 @@
 module.exports = {
-  name : `Cases`,
+  name : `TokenExchange`,
   directory : `${__dirname}`,
 }

@@ -3,7 +3,7 @@ import "CaseLibrary.sol";
 contract Case {
 
     using CaseLibrary for CaseLibrary.Data;
-    CaseLibrary.Data caseData;
+    CaseLibrary.Data internal caseData;
 
     address public OriginatingParty;
     uint public dateIssued;
