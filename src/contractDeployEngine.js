@@ -20,7 +20,7 @@ export default class DeployEngine extends StateEngine {
   compile() {
     return new Promise((resolve, reject) => {
       let sources = new Object();
-      fs.readdirAsync(`${this.directory}/src`).map((file) => {
+      fs.readdirAsync(`${this.directory}/contracts`).map((file) => {
         if(file.match(RegExp(".sol"))){
           return join(file, fs.readFileAsync(`${this.directory}/src/${file}`, `utf-8`), (file, src) => {
             sources[file] = src;
@@ -161,7 +161,7 @@ export default class DeployEngine extends StateEngine {
     return new Promise((resolve, reject) => {
       let library;
       let deployed;
-      fs.readdirAsync(`${this.directory}/src`).map((file) => {
+      fs.readdirAsync(`${this.directory}/contracts`).map((file) => {
         let target = file.replace('.sol', '');
         let m = placeholder.match(new RegExp(target))
         if(m){
