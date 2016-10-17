@@ -54,7 +54,7 @@ var DeployEngine = function (_StateEngine) {
 
   _createClass(DeployEngine, [{
     key: 'compile',
-    value: function compile() {
+    value: function compile(directory) {
       var _this2 = this;
 
       return new _bluebird2.default(function (resolve, reject) {

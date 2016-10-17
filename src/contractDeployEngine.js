@@ -17,7 +17,7 @@ export default class DeployEngine extends StateEngine {
     this.libraries = options.libraries || {};
   }
 
-  compile() {
+  compile(directory) {
     return new Promise((resolve, reject) => {
       let sources = new Object();
       fs.readdirAsync(`${this.directory}`).map((file) => {
