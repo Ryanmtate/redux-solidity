@@ -14,6 +14,7 @@ export default class DeployEngine extends StateEngine {
     this.deployedDir = options.deployedDir || `${process.cwd()}/deployed`;
     this.compiledDir = options.compiledDir || `${process.cwd()}/compiled`;
     this.compiled = options.compiled || {};
+    this.fileName = options.fileName || options.contractName;
     this.deployed = {};
     this.params = options.params;
     this.libraries = options.libraries || {};
@@ -73,8 +74,8 @@ export default class DeployEngine extends StateEngine {
         }
       }).then((compiled) => {
         this.compiled = compiled;
-        this.abi = JSON.parse(compiled['contracts'][this.name]['interface']);
-        this.bytecode = compiled['contracts'][this.name]['bytecode'];
+        this.abi = JSON.parse(compiled['contracts'][this.contractName]['interface']);
+        this.bytecode = compiled['contracts'][this.contractName]['bytecode'];
         resolve(compiled);
       }).catch((error) => {
         reject(error);
@@ -92,9 +93,9 @@ export default class DeployEngine extends StateEngine {
           return compiled;
         }
       }).then((compiled) => {
-        this.deployed = compiled['contracts'][this.name];
-        this.abi = JSON.parse(compiled['contracts'][this.name]['interface']);
-        return this.linkBytecode(compiled['contracts'][this.name]['bytecode']);
+        this.deployed = compiled['contracts'][this.contractName];
+        this.abi = JSON.parse(compiled['contracts'][this.contractName]['interface']);
+        return this.linkBytecode(compiled['contracts'][this.contractName]['bytecode']);
       }).then((bytecode) => {
         this.bytecode = bytecode;
         this.sendObject['data'] = this.bytecode;
@@ -128,7 +129,7 @@ export default class DeployEngine extends StateEngine {
   saveDeployed(name, deployed) {
     return new Promise((resolve, reject) => {
       let Deployed = deployed || this.deployed;
-      let Name = name || this.name;
+      let Name = name || this.fileName || this.contractName;
       Promise.resolve(fs.existsSync(`${this.deployedDir}`)).then((exists) => {
         if(!exists){
           return fs.mkdirAsync(`${this.deployedDir}`);

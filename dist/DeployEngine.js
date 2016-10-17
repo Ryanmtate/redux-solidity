@@ -48,6 +48,7 @@ var DeployEngine = function (_StateEngine) {
     _this.deployedDir = options.deployedDir || process.cwd() + '/deployed';
     _this.compiledDir = options.compiledDir || process.cwd() + '/compiled';
     _this.compiled = options.compiled || {};
+    _this.fileName = options.fileName || options.contractName;
     _this.deployed = {};
     _this.params = options.params;
     _this.libraries = options.libraries || {};
@@ -118,8 +119,8 @@ var DeployEngine = function (_StateEngine) {
           }
         }).then(function (compiled) {
           _this4.compiled = compiled;
-          _this4.abi = JSON.parse(compiled['contracts'][_this4.name]['interface']);
-          _this4.bytecode = compiled['contracts'][_this4.name]['bytecode'];
+          _this4.abi = JSON.parse(compiled['contracts'][_this4.contractName]['interface']);
+          _this4.bytecode = compiled['contracts'][_this4.contractName]['bytecode'];
           resolve(compiled);
         }).catch(function (error) {
           reject(error);
@@ -140,9 +141,9 @@ var DeployEngine = function (_StateEngine) {
             return compiled;
           }
         }).then(function (compiled) {
-          _this5.deployed = compiled['contracts'][_this5.name];
-          _this5.abi = JSON.parse(compiled['contracts'][_this5.name]['interface']);
-          return _this5.linkBytecode(compiled['contracts'][_this5.name]['bytecode']);
+          _this5.deployed = compiled['contracts'][_this5.contractName];
+          _this5.abi = JSON.parse(compiled['contracts'][_this5.contractName]['interface']);
+          return _this5.linkBytecode(compiled['contracts'][_this5.contractName]['bytecode']);
         }).then(function (bytecode) {
           _this5.bytecode = bytecode;
           _this5.sendObject['data'] = _this5.bytecode;
@@ -179,7 +180,7 @@ var DeployEngine = function (_StateEngine) {
 
       return new _bluebird2.default(function (resolve, reject) {
         var Deployed = deployed || _this6.deployed;
-        var Name = name || _this6.name;
+        var Name = name || _this6.fileName || _this6.contractName;
         _bluebird2.default.resolve(fs.existsSync('' + _this6.deployedDir)).then(function (exists) {
           if (!exists) {
             return fs.mkdirAsync('' + _this6.deployedDir);

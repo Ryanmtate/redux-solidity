@@ -33,7 +33,7 @@ var StateEngine = function () {
 
     this.web3 = options.web3;
     this.eth = _bluebird2.default.promisifyAll(options['web3']['eth']);
-    this.name = options.name;
+    this.contractName = options.contractName;
     this.sendObject = options.sendObject;
     this.abi = options.abi;
     this.address = options.address;
