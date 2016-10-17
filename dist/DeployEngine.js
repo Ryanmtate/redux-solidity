@@ -59,9 +59,9 @@ var DeployEngine = function (_StateEngine) {
 
       return new _bluebird2.default(function (resolve, reject) {
         var sources = new Object();
-        fs.readdirAsync(_this2.directory + '/src').map(function (file) {
+        fs.readdirAsync(_this2.directory + '/contracts').map(function (file) {
           if (file.match(RegExp(".sol"))) {
-            return join(file, fs.readFileAsync(_this2.directory + '/src/' + file, 'utf-8'), function (file, src) {
+            return join(file, fs.readFileAsync(_this2.directory + '/contracts/' + file, 'utf-8'), function (file, src) {
               sources[file] = src;
             });
           }
@@ -220,7 +220,7 @@ var DeployEngine = function (_StateEngine) {
       return new _bluebird2.default(function (resolve, reject) {
         var library = void 0;
         var deployed = void 0;
-        fs.readdirAsync(_this9.directory + '/src').map(function (file) {
+        fs.readdirAsync(_this9.directory + '/contracts').map(function (file) {
           var target = file.replace('.sol', '');
           var m = placeholder.match(new RegExp(target));
           if (m) {
