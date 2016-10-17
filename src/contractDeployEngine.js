@@ -53,12 +53,12 @@ export default class DeployEngine extends StateEngine {
         }
       }).then(() => {
         return jsonfile.writeFileAsync(`${this.compiledDir}/compiled.json`, this.compiled);
-      })then(() => {
+      }).then(() => {
         resolve(true);
       }).catch((error) => {
         reject(error);
-      })
-    })
+      });
+    });
   }
 
   getCompiled() {

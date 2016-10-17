@@ -87,7 +87,15 @@ var DeployEngine = function (_StateEngine) {
       var _this3 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
-        jsonfile.writeFileAsync(_this3.compiledDir + '/compiled.json', _this3.compiled).then(function () {
+        _bluebird2.default.resolve(fs.existsSync('' + _this3.compiledDir)).then(function (exists) {
+          if (!exists) {
+            return fs.mkdirAsync('' + _this3.compiledDir);
+          } else {
+            return true;
+          }
+        }).then(function () {
+          return jsonfile.writeFileAsync(_this3.compiledDir + '/compiled.json', _this3.compiled);
+        }).then(function () {
           resolve(true);
         }).catch(function (error) {
           reject(error);
