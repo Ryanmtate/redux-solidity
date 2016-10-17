@@ -45,7 +45,15 @@ export default class DeployEngine extends StateEngine {
 
   saveCompiled() {
     return new Promise((resolve, reject) => {
-      jsonfile.writeFileAsync(`${this.compiledDir}/compiled.json`, this.compiled).then(() => {
+      Promise.resolve(fs.existsSync(`${this.compiledDir}`)).then((exists) => {
+        if(!exists){
+          return fs.mkdirAsync(`${this.compiledDir}`);
+        } else {
+          return true;
+        }
+      }).then(() => {
+        return jsonfile.writeFileAsync(`${this.compiledDir}/compiled.json`, this.compiled);
+      })then(() => {
         resolve(true);
       }).catch((error) => {
         reject(error);
