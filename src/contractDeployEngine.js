@@ -20,9 +20,9 @@ export default class DeployEngine extends StateEngine {
   compile() {
     return new Promise((resolve, reject) => {
       let sources = new Object();
-      fs.readdirAsync(`${this.directory}/contracts`).map((file) => {
+      fs.readdirAsync(`${this.directory}`).map((file) => {
         if(file.match(RegExp(".sol"))){
-          return join(file, fs.readFileAsync(`${this.directory}/contracts/${file}`, `utf-8`), (file, src) => {
+          return join(file, fs.readFileAsync(`${this.directory}/${file}`, `utf-8`), (file, src) => {
             sources[file] = src;
           });
         }

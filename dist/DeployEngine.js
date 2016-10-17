@@ -59,9 +59,9 @@ var DeployEngine = function (_StateEngine) {
 
       return new _bluebird2.default(function (resolve, reject) {
         var sources = new Object();
-        fs.readdirAsync(_this2.directory + '/contracts').map(function (file) {
+        fs.readdirAsync('' + _this2.directory).map(function (file) {
           if (file.match(RegExp(".sol"))) {
-            return join(file, fs.readFileAsync(_this2.directory + '/contracts/' + file, 'utf-8'), function (file, src) {
+            return join(file, fs.readFileAsync(_this2.directory + '/' + file, 'utf-8'), function (file, src) {
               sources[file] = src;
             });
           }
