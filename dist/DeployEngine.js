@@ -47,7 +47,7 @@ var DeployEngine = function (_StateEngine) {
     _this.contractDir = options.contractDir || process.cwd() + '/contracts';
     _this.deployedDir = options.deployedDir || process.cwd() + '/deployed';
     _this.compiledDir = options.compiledDir || process.cwd() + '/compiled';
-    _this.compiled = {};
+    _this.compiled = options.compiled || {};
     _this.deployed = {};
     _this.params = options.params;
     _this.libraries = options.libraries || {};
@@ -74,8 +74,10 @@ var DeployEngine = function (_StateEngine) {
             reject(compiled);
           } else {
             _this2.compiled = compiled;
-            resolve(compiled);
+            return _this2.saveCompiled();
           }
+        }).then(function () {
+          resolve(_this2.compiled);
         }).catch(function (error) {
           reject(error);
         });
@@ -108,7 +110,13 @@ var DeployEngine = function (_StateEngine) {
       var _this4 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
-        jsonfile.readFileAsync(_this4.compiledDir + '/compiled.json').then(function (compiled) {
+        _bluebird2.default.resolve(fs.existsSync(_this4.compiledDir + '/compiled.json')).then(function (exists) {
+          if (!exists) {
+            resolve(undefined);
+          } else {
+            return jsonfile.readFileAsync(_this4.compiledDir + '/compiled.json');
+          }
+        }).then(function (compiled) {
           _this4.compiled = compiled;
           _this4.abi = JSON.parse(compiled['contracts'][_this4.name]['interface']);
           _this4.bytecode = compiled['contracts'][_this4.name]['bytecode'];
@@ -125,7 +133,13 @@ var DeployEngine = function (_StateEngine) {
 
       return new _bluebird2.default(function (resolve, reject) {
         _this5.deployed = new Object();
-        _this5.compile().then(function (compiled) {
+        _this5.getCompiled().then(function (compiled) {
+          if (!compiled) {
+            return _this5.compile();
+          } else {
+            return compiled;
+          }
+        }).then(function (compiled) {
           _this5.deployed = compiled['contracts'][_this5.name];
           _this5.abi = JSON.parse(compiled['contracts'][_this5.name]['interface']);
           return _this5.linkBytecode(compiled['contracts'][_this5.name]['bytecode']);

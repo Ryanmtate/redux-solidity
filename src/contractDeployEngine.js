@@ -13,7 +13,7 @@ export default class DeployEngine extends StateEngine {
     this.contractDir = options.contractDir || `${process.cwd()}/contracts`;
     this.deployedDir = options.deployedDir || `${process.cwd()}/deployed`;
     this.compiledDir = options.compiledDir || `${process.cwd()}/compiled`;
-    this.compiled = {};
+    this.compiled = options.compiled || {};
     this.deployed = {};
     this.params = options.params;
     this.libraries = options.libraries || {};
@@ -35,8 +35,10 @@ export default class DeployEngine extends StateEngine {
           reject(compiled);
         } else {
           this.compiled = compiled;
-          resolve(compiled);
+          return this.saveCompiled();
         }
+      }).then(() => {
+        resolve(this.compiled);
       }).catch((error) => {
         reject(error);
       });
@@ -63,7 +65,13 @@ export default class DeployEngine extends StateEngine {
 
   getCompiled() {
     return new Promise((resolve, reject) => {
-      jsonfile.readFileAsync(`${this.compiledDir}/compiled.json`).then((compiled) => {
+      Promise.resolve(fs.existsSync(`${this.compiledDir}/compiled.json`)).then((exists) => {
+        if(!exists){
+          resolve(undefined);
+        } else {
+          return jsonfile.readFileAsync(`${this.compiledDir}/compiled.json`)
+        }
+      }).then((compiled) => {
         this.compiled = compiled;
         this.abi = JSON.parse(compiled['contracts'][this.name]['interface']);
         this.bytecode = compiled['contracts'][this.name]['bytecode'];
@@ -77,7 +85,13 @@ export default class DeployEngine extends StateEngine {
   deploy() {
     return new Promise((resolve, reject) => {
       this.deployed = new Object();
-      this.compile().then((compiled) => {
+      this.getCompiled().then((compiled) => {
+        if (!compiled) {
+          return this.compile();
+        } else {
+          return compiled;
+        }
+      }).then((compiled) => {
         this.deployed = compiled['contracts'][this.name];
         this.abi = JSON.parse(compiled['contracts'][this.name]['interface']);
         return this.linkBytecode(compiled['contracts'][this.name]['bytecode']);
