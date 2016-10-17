@@ -10,7 +10,9 @@ const jsonfile = Promise.promisifyAll(require('jsonfile'));
 export default class DeployEngine extends StateEngine {
   constructor(options){
     super(options);
-    this.directory = options.directory
+    this.contractDir = options.contractDir || `${process.cwd()}/contracts`;
+    this.deployedDir = options.deployedDir || `${process.cwd()}/deployed`;
+    this.compiledDir = options.compiledDir || `${process.cwd()}/compiled`;
     this.compiled = {};
     this.deployed = {};
     this.params = options.params;
@@ -20,9 +22,9 @@ export default class DeployEngine extends StateEngine {
   compile(directory) {
     return new Promise((resolve, reject) => {
       let sources = new Object();
-      fs.readdirAsync(`${this.directory}`).map((file) => {
+      fs.readdirAsync(`${this.contractDir}`).map((file) => {
         if(file.match(RegExp(".sol"))){
-          return join(file, fs.readFileAsync(`${this.directory}/${file}`, `utf-8`), (file, src) => {
+          return join(file, fs.readFileAsync(`${this.contractDir}/${file}`, `utf-8`), (file, src) => {
             sources[file] = src;
           });
         }
@@ -43,7 +45,7 @@ export default class DeployEngine extends StateEngine {
 
   saveCompiled() {
     return new Promise((resolve, reject) => {
-      jsonfile.writeFileAsync(`${this.directory}/compiled.json`, this.compiled).then(() => {
+      jsonfile.writeFileAsync(`${this.compiledDir}/compiled.json`, this.compiled).then(() => {
         resolve(true);
       }).catch((error) => {
         reject(error);
@@ -53,7 +55,7 @@ export default class DeployEngine extends StateEngine {
 
   getCompiled() {
     return new Promise((resolve, reject) => {
-      jsonfile.readFileAsync(`${this.directory}/compiled.json`).then((compiled) => {
+      jsonfile.readFileAsync(`${this.compiledDir}/compiled.json`).then((compiled) => {
         this.compiled = compiled;
         this.abi = JSON.parse(compiled['contracts'][this.name]['interface']);
         this.bytecode = compiled['contracts'][this.name]['bytecode'];
@@ -105,14 +107,14 @@ export default class DeployEngine extends StateEngine {
     return new Promise((resolve, reject) => {
       let Deployed = deployed || this.deployed;
       let Name = name || this.name;
-      Promise.resolve(fs.existsSync(`${this.directory}/deployed/`)).then((exists) => {
+      Promise.resolve(fs.existsSync(`${this.deployedDir}`)).then((exists) => {
         if(!exists){
-          return fs.mkdirAsync(`${this.directory}/deployed/`);
+          return fs.mkdirAsync(`${this.deployedDir}`);
         } else {
           return true;
         }
       }).then(() => {
-        return jsonfile.writeFileAsync(`${this.directory}/deployed/${Name}.deployed.json`, Deployed);
+        return jsonfile.writeFileAsync(`${this.deployedDir}/${Name}.deployed.json`, Deployed);
       }).then(() => {
         resolve(true);
       }).catch((error) => {
@@ -161,7 +163,7 @@ export default class DeployEngine extends StateEngine {
     return new Promise((resolve, reject) => {
       let library;
       let deployed;
-      fs.readdirAsync(`${this.directory}/contracts`).map((file) => {
+      fs.readdirAsync(`${this.contractDir}`).map((file) => {
         let target = file.replace('.sol', '');
         let m = placeholder.match(new RegExp(target))
         if(m){

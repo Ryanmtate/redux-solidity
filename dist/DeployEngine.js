@@ -44,7 +44,9 @@ var DeployEngine = function (_StateEngine) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DeployEngine).call(this, options));
 
-    _this.directory = options.directory;
+    _this.contractDir = options.contractDir || process.cwd() + '/contracts';
+    _this.deployedDir = options.deployedDir || process.cwd() + '/deployed';
+    _this.compiledDir = options.compiledDir || process.cwd() + '/compiled';
     _this.compiled = {};
     _this.deployed = {};
     _this.params = options.params;
@@ -59,9 +61,9 @@ var DeployEngine = function (_StateEngine) {
 
       return new _bluebird2.default(function (resolve, reject) {
         var sources = new Object();
-        fs.readdirAsync('' + _this2.directory).map(function (file) {
+        fs.readdirAsync('' + _this2.contractDir).map(function (file) {
           if (file.match(RegExp(".sol"))) {
-            return join(file, fs.readFileAsync(_this2.directory + '/' + file, 'utf-8'), function (file, src) {
+            return join(file, fs.readFileAsync(_this2.contractDir + '/' + file, 'utf-8'), function (file, src) {
               sources[file] = src;
             });
           }
@@ -85,7 +87,7 @@ var DeployEngine = function (_StateEngine) {
       var _this3 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
-        jsonfile.writeFileAsync(_this3.directory + '/compiled.json', _this3.compiled).then(function () {
+        jsonfile.writeFileAsync(_this3.compiledDir + '/compiled.json', _this3.compiled).then(function () {
           resolve(true);
         }).catch(function (error) {
           reject(error);
@@ -98,7 +100,7 @@ var DeployEngine = function (_StateEngine) {
       var _this4 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
-        jsonfile.readFileAsync(_this4.directory + '/compiled.json').then(function (compiled) {
+        jsonfile.readFileAsync(_this4.compiledDir + '/compiled.json').then(function (compiled) {
           _this4.compiled = compiled;
           _this4.abi = JSON.parse(compiled['contracts'][_this4.name]['interface']);
           _this4.bytecode = compiled['contracts'][_this4.name]['bytecode'];
@@ -156,14 +158,14 @@ var DeployEngine = function (_StateEngine) {
       return new _bluebird2.default(function (resolve, reject) {
         var Deployed = deployed || _this6.deployed;
         var Name = name || _this6.name;
-        _bluebird2.default.resolve(fs.existsSync(_this6.directory + '/deployed/')).then(function (exists) {
+        _bluebird2.default.resolve(fs.existsSync('' + _this6.deployedDir)).then(function (exists) {
           if (!exists) {
-            return fs.mkdirAsync(_this6.directory + '/deployed/');
+            return fs.mkdirAsync('' + _this6.deployedDir);
           } else {
             return true;
           }
         }).then(function () {
-          return jsonfile.writeFileAsync(_this6.directory + '/deployed/' + Name + '.deployed.json', Deployed);
+          return jsonfile.writeFileAsync(_this6.deployedDir + '/' + Name + '.deployed.json', Deployed);
         }).then(function () {
           resolve(true);
         }).catch(function (error) {
@@ -220,7 +222,7 @@ var DeployEngine = function (_StateEngine) {
       return new _bluebird2.default(function (resolve, reject) {
         var library = void 0;
         var deployed = void 0;
-        fs.readdirAsync(_this9.directory + '/contracts').map(function (file) {
+        fs.readdirAsync('' + _this9.contractDir).map(function (file) {
           var target = file.replace('.sol', '');
           var m = placeholder.match(new RegExp(target));
           if (m) {
