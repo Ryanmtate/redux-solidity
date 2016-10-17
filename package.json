@@ -8,7 +8,8 @@
     "test-state-engine": "babel-node ./tests/StateEngine/test.js --presets es2015,stage-0",
     "transpile-deploy": "babel ./src/contractDeployEngine.js --out-file ./dist/DeployEngine.js --presets es2015,stage-0",
     "transpile-state": "babel ./src/contractStateEngine.js --out-file ./dist/StateEngine.js --presets es2015,stage-0",
-    "transpile" : "npm run transpile-state && npm run transpile-deploy"
+    "transpile" : "npm run transpile-state && npm run transpile-deploy",
+    "push": "npm run transpile && git add . && git commit -m 'updates... read the commit logs' && git push -u origin master"
   },
   "keywords": [
     "Solidity",
