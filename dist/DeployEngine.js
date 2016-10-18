@@ -179,7 +179,7 @@ var DeployEngine = function (_StateEngine) {
       var _this6 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
-        _bluebird2.default.delay(100, fs.existsSync('' + _this6.deployedDir)).then(function (exists) {
+        _bluebird2.default.delay(fs.existsSync('' + _this6.deployedDir)).then(function (exists) {
           if (!exists) {
             return fs.mkdirAsync('' + _this6.deployedDir);
           } else {

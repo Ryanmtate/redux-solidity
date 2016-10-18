@@ -70,7 +70,7 @@ export default class DeployEngine extends StateEngine {
         if(!exists){
           resolve(undefined);
         } else {
-          return jsonfile.readFileAsync(`${this.compiledDir}/compiled.json`)
+          return jsonfile.readFileAsync(`${this.compiledDir}/compiled.json`);
         }
       }).then((compiled) => {
         this.compiled = compiled;
@@ -79,8 +79,8 @@ export default class DeployEngine extends StateEngine {
         resolve(compiled);
       }).catch((error) => {
         reject(error);
-      })
-    })
+      });
+    });
   }
 
   deploy() {
@@ -128,7 +128,7 @@ export default class DeployEngine extends StateEngine {
 
   saveDeployed() {
     return new Promise((resolve, reject) => {
-      Promise.delay(100, fs.existsSync(`${this.deployedDir}`)).then((exists) => {
+      Promise.delay(fs.existsSync(`${this.deployedDir}`)).then((exists) => {
         if(!exists){
           return fs.mkdirAsync(`${this.deployedDir}`);
         } else {

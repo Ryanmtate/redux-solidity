@@ -123,7 +123,7 @@ export default class StateEngine {
 
   getTransactionReceipt(txHash) {
     return new Promise((resolve, reject) => {
-      Promise.delay(5000).then(() => {
+      Promise.delay(2000).then(() => {
         return this.eth.getTransactionReceiptAsync(txHash);
       }).then((txReceipt) => {
         if(!txReceipt){
