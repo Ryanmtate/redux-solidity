@@ -175,20 +175,18 @@ var DeployEngine = function (_StateEngine) {
     }
   }, {
     key: 'saveDeployed',
-    value: function saveDeployed(name, deployed) {
+    value: function saveDeployed() {
       var _this6 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
-        var Deployed = deployed || _this6.deployed;
-        var Name = name || _this6.fileName || _this6.contractName;
-        _bluebird2.default.resolve(fs.existsSync('' + _this6.deployedDir)).then(function (exists) {
+        _bluebird2.default.delay(100, fs.existsSync('' + _this6.deployedDir)).then(function (exists) {
           if (!exists) {
             return fs.mkdirAsync('' + _this6.deployedDir);
           } else {
             return true;
           }
         }).then(function () {
-          return jsonfile.writeFileAsync(_this6.deployedDir + '/' + Name + '.deployed.json', Deployed);
+          return jsonfile.writeFileAsync(_this6.deployedDir + '/' + _this6.fileName + '.deployed.json', _this6.deployed);
         }).then(function () {
           resolve(true);
         }).catch(function (error) {
