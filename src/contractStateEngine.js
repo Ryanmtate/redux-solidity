@@ -53,10 +53,12 @@ export default class StateEngine {
     });
   }
 
-  watchEvents(_filterParams, _filterWindow, _eventType) {
+  watchEvents(_filterParams, _filterWindow, _eventFunc) {
     return (dispatch) => {
-      const eventFunc = _eventType || this.contract.allEvents;
-      if (!!_eventType) {
+      const filterParams = _filterParams || {};
+      const filterWindow = _filterWindow || { fromBlock : this.deployedBlockNumber, toBlock : 'latest' };
+      const eventFunc = _eventFunc || this.contract.allEvents;
+      if (!!_eventFunc) {
         this.events = eventFunc(_filterParams, _filterWindow);
       } else {
         this.events = eventFunc(_filterWindow);
@@ -77,10 +79,12 @@ export default class StateEngine {
   /**
    *
    */
-  getEvents(_filterParams, _filterWindow, _eventType) {
+  getEvents(_filterParams, _filterWindow, _eventFunc) {
     return (dispatch) => {
-      const eventFunc = _eventType || this.contract.allEvents;
-      if (!!_eventType) {
+      const filterParams = _filterParams || {};
+      const filterWindow = _filterWindow || { fromBlock : this.deployedBlockNumber, toBlock : 'latest' };
+      const eventFunc = _eventFunc || this.contract.allEvents;
+      if (!!_eventFunc) {
         this.events = eventFunc(_filterParams, _filterWindow);
       } else {
         this.events = eventFunc(_filterWindow);

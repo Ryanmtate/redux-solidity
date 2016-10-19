@@ -84,12 +84,14 @@ var StateEngine = function () {
     }
   }, {
     key: 'watchEvents',
-    value: function watchEvents(_filterParams, _filterWindow, _eventType) {
+    value: function watchEvents(_filterParams, _filterWindow, _eventFunc) {
       var _this3 = this;
 
       return function (dispatch) {
-        var eventFunc = _eventType || _this3.contract.allEvents;
-        if (!!_eventType) {
+        var filterParams = _filterParams || {};
+        var filterWindow = _filterWindow || { fromBlock: _this3.deployedBlockNumber, toBlock: 'latest' };
+        var eventFunc = _eventFunc || _this3.contract.allEvents;
+        if (!!_eventFunc) {
           _this3.events = eventFunc(_filterParams, _filterWindow);
         } else {
           _this3.events = eventFunc(_filterWindow);
@@ -115,12 +117,14 @@ var StateEngine = function () {
 
   }, {
     key: 'getEvents',
-    value: function getEvents(_filterParams, _filterWindow, _eventType) {
+    value: function getEvents(_filterParams, _filterWindow, _eventFunc) {
       var _this4 = this;
 
       return function (dispatch) {
-        var eventFunc = _eventType || _this4.contract.allEvents;
-        if (!!_eventType) {
+        var filterParams = _filterParams || {};
+        var filterWindow = _filterWindow || { fromBlock: _this4.deployedBlockNumber, toBlock: 'latest' };
+        var eventFunc = _eventFunc || _this4.contract.allEvents;
+        if (!!_eventFunc) {
           _this4.events = eventFunc(_filterParams, _filterWindow);
         } else {
           _this4.events = eventFunc(_filterWindow);
