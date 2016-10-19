@@ -84,11 +84,17 @@ var StateEngine = function () {
     }
   }, {
     key: 'watchEvents',
-    value: function watchEvents() {
+    value: function watchEvents(_filterParams, _filterWindow, _eventType) {
       var _this3 = this;
 
       return function (dispatch) {
-        _this3.events = _this3.contract.allEvents({ fromBlock: _this3.deployedBlockNumber, toBlock: 'latest' });
+        var eventFunc = _eventType || _this3.contract.allEvents;
+        if (!!_eventType) {
+          _this3.events = eventFunc(_filterParams, _filterWindow);
+        } else {
+          _this3.events = eventFunc(_filterWindow);
+        };
+
         _this3.events.watch(function (error, result) {
           if (error) {
             throw error;
@@ -102,13 +108,24 @@ var StateEngine = function () {
         });
       };
     }
+
+    /**
+     *
+     */
+
   }, {
     key: 'getEvents',
-    value: function getEvents() {
+    value: function getEvents(_filterParams, _filterWindow, _eventType) {
       var _this4 = this;
 
       return function (dispatch) {
-        _this4.events = _this4.contract.allEvents({ fromBlock: _this4.deployedBlockNumber, toBlock: 'latest' });
+        var eventFunc = _eventType || _this4.contract.allEvents;
+        if (!!_eventType) {
+          _this4.events = eventFunc(_filterParams, _filterWindow);
+        } else {
+          _this4.events = eventFunc(_filterWindow);
+        };
+
         _this4.events.get(function (error, logs) {
           if (error) {
             throw error;

@@ -53,9 +53,15 @@ export default class StateEngine {
     });
   }
 
-  watchEvents() {
+  watchEvents(_filterParams, _filterWindow, _eventType) {
     return (dispatch) => {
-      this.events = this.contract.allEvents({fromBlock : this.deployedBlockNumber, toBlock : 'latest'});
+      const eventFunc = _eventType || this.contract.allEvents;
+      if (!!_eventType) {
+        this.events = eventFunc(_filterParams, _filterWindow);
+      } else {
+        this.events = eventFunc(_filterWindow);
+      };
+
       this.events.watch((error, result) => {
         if(error){throw error;}
         let type = `LOG`;
@@ -68,9 +74,18 @@ export default class StateEngine {
     }
   }
 
-  getEvents() {
+  /**
+   *
+   */
+  getEvents(_filterParams, _filterWindow, _eventType) {
     return (dispatch) => {
-      this.events = this.contract.allEvents({fromBlock : this.deployedBlockNumber, toBlock : 'latest'});
+      const eventFunc = _eventType || this.contract.allEvents;
+      if (!!_eventType) {
+        this.events = eventFunc(_filterParams, _filterWindow);
+      } else {
+        this.events = eventFunc(_filterWindow);
+      };
+
       this.events.get((error, logs) => {
         if(error){throw error;}
         Promise.resolve(logs).map((result) => {
