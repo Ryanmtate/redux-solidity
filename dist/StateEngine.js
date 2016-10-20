@@ -313,7 +313,6 @@ var StateEngine = function () {
           return _extends({}, state, _defineProperty({}, action.contract, action.result));
           break;
         case 'LOG':
-          state['undefined'] ? state = null : null;
           return _extends({}, state, _defineProperty({}, action.contract, _extends({}, state[action.contract], {
             'LOGS': _extends({}, state[action.contract]['LOGS'], _defineProperty({}, action.method, _extends({}, state[action.contract]['LOGS'][action.method], _defineProperty({}, action.result['transactionHash'], action.result['args']))))
           })));
