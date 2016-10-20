@@ -128,7 +128,7 @@ export default class DeployEngine extends StateEngine {
 
   saveDeployed() {
     return new Promise((resolve, reject) => {
-      Promise.delay(fs.existsSync(`${this.deployedDir}`)).then((exists) => {
+      Promise.delay(500, fs.existsSync(`${this.deployedDir}`)).then((exists) => {
         if(!exists){
           return fs.mkdirAsync(`${this.deployedDir}`);
         } else {
