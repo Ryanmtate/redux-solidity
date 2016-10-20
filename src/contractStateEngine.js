@@ -253,6 +253,12 @@ export default class StateEngine {
         };
         break;
       case 'LOG':
+        !state[action.contract] ? state = {
+          ...state,
+          [action.contract] : {
+            'LOGS': {}
+          }
+        } : null;
         return {
           ...state,
           [action.contract] : {
