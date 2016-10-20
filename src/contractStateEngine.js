@@ -254,7 +254,6 @@ export default class StateEngine {
         break;
       case 'LOG':
         state['undefined'] ? state = null : null;
-        !state[action.contract]['LOGS'] ? state[action.contract]['LOGS'] = {} : null;
         return {
           ...state,
           [action.contract] : {
