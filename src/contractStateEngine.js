@@ -363,6 +363,7 @@ export default class StateEngine {
         };
 
         dispatch({type : 'INIT_STATE', result : State, contract : this.address});
+        return null;
       }).catch((error) => {
         throw error;
       });

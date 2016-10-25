@@ -412,6 +412,7 @@ var StateEngine = function () {
           State = _extends({}, State, state);
 
           dispatch({ type: 'INIT_STATE', result: State, contract: _this13.address });
+          return null;
         }).catch(function (error) {
           throw error;
         });
