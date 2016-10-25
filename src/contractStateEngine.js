@@ -148,7 +148,7 @@ export default class StateEngine {
         return this.eth.getTransactionReceiptAsync(txHash);
       }).then((txReceipt) => {
         if(!txReceipt){
-          return this.getTransactionReceipt(txHash, _counter++);
+          return this.getTransactionReceipt(txHash, ++_counter);
         } else {
           resolve(txReceipt);
         };
