@@ -189,15 +189,19 @@ var StateEngine = function () {
     }
   }, {
     key: 'getTransactionReceipt',
-    value: function getTransactionReceipt(txHash) {
+    value: function getTransactionReceipt(txHash, _counter) {
       var _this7 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
+        var counter = _counter || 0;
+        if (counter > 10) {
+          reject(new Error('Could not find transaction receipt.'));
+        }
         _bluebird2.default.delay(2000).then(function () {
           return _this7.eth.getTransactionReceiptAsync(txHash);
         }).then(function (txReceipt) {
           if (!txReceipt) {
-            return _this7.getTransactionReceipt(txHash);
+            return _this7.getTransactionReceipt(txHash, _counter++);
           } else {
             resolve(txReceipt);
           };
