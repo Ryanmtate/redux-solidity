@@ -96,11 +96,13 @@ export default class StateEngine {
           let type = `LOG`;
           let method = `${result.event}`;
 
-          let action = {type, result, method, contract : this.address}
+          let action = {type, result, method, contract: this.address}
 
           dispatch(action);
+          return null;
         }).catch((error) => {
-          throw error;
+          dispatch({type: 'LOG_ERROR', result: error, method: null, contract: this.address});
+          return null;
         });
       });
     }

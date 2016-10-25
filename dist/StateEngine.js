@@ -141,8 +141,10 @@ var StateEngine = function () {
             var action = { type: type, result: result, method: method, contract: _this4.address };
 
             dispatch(action);
+            return null;
           }).catch(function (error) {
-            throw error;
+            dispatch({ type: 'LOG_ERROR', result: error, method: null, contract: _this4.address });
+            return null;
           });
         });
       };
