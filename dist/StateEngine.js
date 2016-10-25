@@ -89,7 +89,7 @@ var StateEngine = function () {
 
       return function (dispatch) {
         var filterParams = _filterParams || {};
-        var filterWindow = _filterWindow || { fromBlock: _this3.deployedBlockNumber, toBlock: 'latest' };
+        var filterWindow = _filterWindow || { fromBlock: 0, toBlock: 'latest' };
         var eventFunc = _eventFunc || _this3.contract.allEvents;
         if (!!_eventFunc) {
           _this3.events = eventFunc(_filterParams, _filterWindow);
@@ -122,7 +122,7 @@ var StateEngine = function () {
 
       return function (dispatch) {
         var filterParams = _filterParams || {};
-        var filterWindow = _filterWindow || { fromBlock: _this4.deployedBlockNumber, toBlock: 'latest' };
+        var filterWindow = _filterWindow || { fromBlock: 0, toBlock: 'latest' };
         var eventFunc = _eventFunc || _this4.contract.allEvents;
         if (!!_eventFunc) {
           _this4.events = eventFunc(_filterParams, _filterWindow);

@@ -56,7 +56,7 @@ export default class StateEngine {
   watchEvents(_filterParams, _filterWindow, _eventFunc) {
     return (dispatch) => {
       const filterParams = _filterParams || {};
-      const filterWindow = _filterWindow || { fromBlock : this.deployedBlockNumber, toBlock : 'latest' };
+      const filterWindow = _filterWindow || { fromBlock : 0, toBlock : 'latest' };
       const eventFunc = _eventFunc || this.contract.allEvents;
       if (!!_eventFunc) {
         this.events = eventFunc(_filterParams, _filterWindow);
@@ -82,7 +82,7 @@ export default class StateEngine {
   getEvents(_filterParams, _filterWindow, _eventFunc) {
     return (dispatch) => {
       const filterParams = _filterParams || {};
-      const filterWindow = _filterWindow || { fromBlock : this.deployedBlockNumber, toBlock : 'latest' };
+      const filterWindow = _filterWindow || { fromBlock : 0, toBlock : 'latest' };
       const eventFunc = _eventFunc || this.contract.allEvents;
       if (!!_eventFunc) {
         this.events = eventFunc(_filterParams, _filterWindow);
