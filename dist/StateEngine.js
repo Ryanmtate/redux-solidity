@@ -201,7 +201,7 @@ var StateEngine = function () {
           return _this7.eth.getTransactionReceiptAsync(txHash);
         }).then(function (txReceipt) {
           if (!txReceipt) {
-            return _this7.getTransactionReceipt(txHash, ++_counter);
+            return _this7.getTransactionReceipt(txHash, ++counter);
           } else {
             resolve(txReceipt);
           };
