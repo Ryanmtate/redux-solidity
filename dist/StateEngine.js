@@ -226,14 +226,15 @@ var StateEngine = function () {
 
       return new _bluebird2.default(function (resolve, reject) {
         _bluebird2.default.resolve([_this8.eth.getGasPriceAsync(), _this8.eth.getTransactionCountAsync(_from, 'pending')]).spread(function (gasPrice, nonce) {
-          var tx = new _ethereumjsTx2.default({});
-          _from ? tx.from = _from : reject(new Error('Missing from address'));
-          _to ? tx.to = _to : null;
-          _value ? tx.value = _value : tx.value = 0;
-          _data ? tx.data = _data : reject(new Error('Missing data'));
-          _gasLimit ? tx.gasLimit = _gasLimit : tx.gasLimit = 3141592;
-          tx.nonce = Number(nonce.toString());
-          tx.gasPrice = Number(gasPrice.toString());
+          var tx = new _ethereumjsTx2.default({
+            from: _from,
+            to: _to,
+            value: _value,
+            data: _data,
+            gasLimit: _gasLimit,
+            nonce: Number(nonce.toString()),
+            gasPrice: Number(gasPrice.toString())
+          });
           tx.sign(_privateKey);
           var serialized = tx.serialize();
           console.log(tx);
