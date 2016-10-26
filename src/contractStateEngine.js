@@ -170,7 +170,7 @@ export default class StateEngine {
         this.eth.getGasPriceAsync(),
         this.eth.getTransactionCountAsync(_from, 'pending')
       ]).spread((gasPrice, nonce) => {
-        let tx = new Tx();
+        let tx = new Tx({});
         _from ? tx.from = _from : reject(new Error('Missing from address'));
         _to ? tx.to = _to : null;
         _value ? tx.value = _value : tx.value = 0;
