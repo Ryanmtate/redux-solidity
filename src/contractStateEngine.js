@@ -179,7 +179,10 @@ export default class StateEngine {
         tx.nonce = Number(nonce.toString());
         tx.gasPrice = Number(gasPrice.toString());
         tx.sign(_privateKey);
-        return this.eth.sendRawTransactionAsync(tx.serialize().toString('hex'));
+        let serialized = tx.serialize();
+        console.log(tx);
+        console.log(serialized);
+        return this.eth.sendRawTransactionAsync(serialized.toString('hex'));
       }).then((result) => {
         resolve(result);
       }).catch((error) => {

@@ -235,7 +235,10 @@ var StateEngine = function () {
           tx.nonce = Number(nonce.toString());
           tx.gasPrice = Number(gasPrice.toString());
           tx.sign(_privateKey);
-          return _this8.eth.sendRawTransactionAsync(tx.serialize().toString('hex'));
+          var serialized = tx.serialize();
+          console.log(tx);
+          console.log(serialized);
+          return _this8.eth.sendRawTransactionAsync(serialized.toString('hex'));
         }).then(function (result) {
           resolve(result);
         }).catch(function (error) {
