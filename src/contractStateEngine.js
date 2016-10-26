@@ -170,7 +170,9 @@ export default class StateEngine {
         this.eth.getGasPriceAsync(),
         this.eth.getTransactionCountAsync(_from, 'pending')
       ]).spread((gasPrice, nonce) => {
-        let tx = new Tx({
+        console.log(_from);
+        console.log(_data);
+        let raw = {
           from: _from,
           to: _to,
           value: _value,
@@ -178,7 +180,8 @@ export default class StateEngine {
           gasLimit: _gasLimit,
           nonce: Number(nonce.toString()),
           gasPrice: Number(gasPrice.toString())
-        });
+        };
+        let tx = new Tx(raw);
 
         let b = new Buffer(_privateKey);
         console.log('tx', tx.toJSON());

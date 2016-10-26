@@ -226,7 +226,9 @@ var StateEngine = function () {
 
       return new _bluebird2.default(function (resolve, reject) {
         _bluebird2.default.resolve([_this8.eth.getGasPriceAsync(), _this8.eth.getTransactionCountAsync(_from, 'pending')]).spread(function (gasPrice, nonce) {
-          var tx = new _ethereumjsTx2.default({
+          console.log(_from);
+          console.log(_data);
+          var raw = {
             from: _from,
             to: _to,
             value: _value,
@@ -234,7 +236,8 @@ var StateEngine = function () {
             gasLimit: _gasLimit,
             nonce: Number(nonce.toString()),
             gasPrice: Number(gasPrice.toString())
-          });
+          };
+          var tx = new _ethereumjsTx2.default(raw);
 
           var b = new Buffer(_privateKey);
           console.log('tx', tx.toJSON());
