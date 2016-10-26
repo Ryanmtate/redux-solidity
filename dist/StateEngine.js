@@ -229,20 +229,18 @@ var StateEngine = function () {
           if (!_from || !_data) {
             reject(new Error('Invalid _from or _data field'));
           };
+          rawTx = {
+            from: _from,
+            to: _to,
+            value: _value,
+            data: _data,
+            gasLimit: _gasLimit,
+            nonce: Number(nonce.toString()),
+            gasPrice: Number(gasPrice.toString())
+          };
 
-          var tx = new _ethereumjsTx2.default();
-          if (!!_to) {
-            tx.to = _to;
-          }
-
-          tx.from = _from;
-          tx.value = _value;
-          tx.data = _data;
-          tx.gasLimit = _gasLimit;
-          tx.nonce = Number(nonce.toString());
-          tx.gasPrice = Number(gasPrice.toString());
-
-          var pkey = new Buffer(_privateKey);
+          var tx = new _ethereumjsTx2.default(rawTx);
+          var pkey = new Buffer(_privateKey, 'hex');
           console.log('tx', tx);
           console.log('_privateKey', _privateKey);
           console.log('buffer', pkey);
