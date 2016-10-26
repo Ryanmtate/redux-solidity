@@ -235,7 +235,7 @@ var StateEngine = function () {
             nonce: Number(nonce.toString()),
             gasPrice: Number(gasPrice.toString())
           });
-          tx.sign(_privateKey);
+          tx.sign(new Buffer(_privateKey));
           var serialized = tx.serialize();
           console.log(tx);
           console.log(serialized);
