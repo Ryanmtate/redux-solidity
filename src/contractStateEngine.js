@@ -1,5 +1,6 @@
 import Promise from 'bluebird';
 import async from 'async';
+import Tx from 'ethereum-js';
 const join = Promise.join;
 const using = Promise.using;
 
@@ -11,6 +12,7 @@ export default class StateEngine {
     this.sendObject = options.sendObject;
     this.abi = options.abi;
     this.address = options.address;
+    this.privateKey = options.privateKey || null;
     this.deployedBlockNumber = options.deployedBlockNumber || 0;
     this.abi && this.address ?
       this.contract = this.eth.contract(this.abi).at(this.address):
@@ -156,6 +158,30 @@ export default class StateEngine {
         };
       }).then((txReceipt) => {
         resolve(txReceipt);
+      }).catch((error) => {
+        reject(error);
+      });
+    });
+  }
+
+  sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey) {
+    return new Promise((resolve, reject) => {
+      Promise.resolve([
+        eth.getGasPriceAsync(),
+        eth.getTransactionCountAsync(_from, 'pending')
+      ]).spread((gasPrice, nonce) => {
+        let tx = new Tx();
+        _from ? tx.from = _from : reject(new Error('Missing from address'));
+        _to ? tx.to = _to : null;
+        _value ? tx.value = _value : tx.value = 0;
+        _data ? tx.data = _data : reject(new Error('Missing data'));
+        _gasLimit? tx.gasLimit = _gasLimit : tx.gasLimit = 3141592;
+        tx.nonce = Number(nonce.toString());
+        tx.gasPrice = Number(gasPrice.toString());
+        tx.sign(_privateKey);
+        return eth.sendRawTransactionAsync(tx.serialize().toString('hex'));
+      }).then((result) => {
+        resolve(result);
       }).catch((error) => {
         reject(error);
       });

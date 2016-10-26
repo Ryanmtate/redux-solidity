@@ -16,6 +16,10 @@ var _async = require('async');
 
 var _async2 = _interopRequireDefault(_async);
 
+var _ethereumJs = require('ethereum-js');
+
+var _ethereumJs2 = _interopRequireDefault(_ethereumJs);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -37,6 +41,7 @@ var StateEngine = function () {
     this.sendObject = options.sendObject;
     this.abi = options.abi;
     this.address = options.address;
+    this.privateKey = options.privateKey || null;
     this.deployedBlockNumber = options.deployedBlockNumber || 0;
     this.abi && this.address ? this.contract = this.eth.contract(this.abi).at(this.address) : this.contract = null;
     this.contract ? this.events = this.contract.allEvents({ fromBlock: this.deployedBlockNumber, toBlock: 'latest' }) : null;
@@ -209,6 +214,28 @@ var StateEngine = function () {
           };
         }).then(function (txReceipt) {
           resolve(txReceipt);
+        }).catch(function (error) {
+          reject(error);
+        });
+      });
+    }
+  }, {
+    key: 'sendSigned',
+    value: function sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey) {
+      return new _bluebird2.default(function (resolve, reject) {
+        _bluebird2.default.resolve([eth.getGasPriceAsync(), eth.getTransactionCountAsync(_from, 'pending')]).spread(function (gasPrice, nonce) {
+          var tx = new _ethereumJs2.default();
+          _from ? tx.from = _from : reject(new Error('Missing from address'));
+          _to ? tx.to = _to : null;
+          _value ? tx.value = _value : tx.value = 0;
+          _data ? tx.data = _data : reject(new Error('Missing data'));
+          _gasLimit ? tx.gasLimit = _gasLimit : tx.gasLimit = 3141592;
+          tx.nonce = Number(nonce.toString());
+          tx.gasPrice = Number(gasPrice.toString());
+          tx.sign(_privateKey);
+          return eth.sendRawTransactionAsync(tx.serialize().toString('hex'));
+        }).then(function (result) {
+          resolve(result);
         }).catch(function (error) {
           reject(error);
         });

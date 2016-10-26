@@ -150,9 +150,33 @@ var DeployEngine = function (_StateEngine) {
           return _this5.eth.contract(_this5.abi);
         }).then(function (contract) {
           if (typeof _this5.params == 'undefined' || _this5.params.length == 0) {
-            return contract.new(_this5.sendObject);
+            if (!_this5.privateKey) {
+              return contract.new(_this5.sendObject);
+            } else {
+              var _sendObject = _this5.sendObject;
+              var from = _sendObject.from;
+              var value = _sendObject.value;
+              var gas = _sendObject.gas;
+
+              var data = contract.new.getData();
+              var to = null;
+              return _this5.sendSigned(from, to, value, gas, data, _this5.privateKey);
+            }
           } else {
-            return contract.new.apply(contract, _toConsumableArray(_this5.params).concat([_this5.sendObject]));
+            if (!_this5.privateKey) {
+              return contract.new.apply(contract, _toConsumableArray(_this5.params).concat([_this5.sendObject]));
+            } else {
+              var _contract$new;
+
+              var _sendObject2 = _this5.sendObject;
+              var _from = _sendObject2.from;
+              var _value = _sendObject2.value;
+              var _gas = _sendObject2.gas;
+
+              var _data = (_contract$new = contract.new).getData.apply(_contract$new, _toConsumableArray(_this5.params));
+              var _to = null;
+              return _this5.sendSigned(_from, _to, _value, _gas, _data, _this5.privateKey);
+            }
           };
         }).then(function (result) {
           return _this5.getTransactionReceipt(result['transactionHash']);

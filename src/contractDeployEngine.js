@@ -102,9 +102,23 @@ export default class DeployEngine extends StateEngine {
         return this.eth.contract(this.abi);
       }).then((contract) => {
         if(typeof this.params == 'undefined' || this.params.length == 0){
-          return contract.new(this.sendObject);
+          if (!this.privateKey) {
+            return contract.new(this.sendObject);
+          } else {
+            const { from, value, gas } = this.sendObject;
+            let data = contract.new.getData();
+            let to = null;
+            return this.sendSigned(from, to, value, gas, data, this.privateKey);
+          }
         } else {
-          return contract.new(...this.params, this.sendObject);
+          if (!this.privateKey) {
+            return contract.new(...this.params, this.sendObject);
+          } else {
+            const { from, value, gas } = this.sendObject;
+            let data = contract.new.getData(...this.params);
+            let to = null;
+            return this.sendSigned(from, to, value, gas, data, this.privateKey);
+          }
         };
       }).then((result) => {
         return this.getTransactionReceipt(result['transactionHash']);
