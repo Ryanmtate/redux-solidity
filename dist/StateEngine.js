@@ -201,7 +201,7 @@ var StateEngine = function () {
 
       return new _bluebird2.default(function (resolve, reject) {
         var counter = _counter || 0;
-        if (counter > 10) {
+        if (counter > 30) {
           reject(new Error('Could not find transaction receipt.'));
         }
         _bluebird2.default.delay(2000).then(function () {

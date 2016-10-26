@@ -147,7 +147,7 @@ export default class StateEngine {
   getTransactionReceipt(txHash, _counter) {
     return new Promise((resolve, reject) => {
       let counter = _counter || 0;
-      if (counter > 10 ) { reject(new Error('Could not find transaction receipt.')); }
+      if (counter > 30 ) { reject(new Error('Could not find transaction receipt.')); }
       Promise.delay(2000).then(() => {
         return this.eth.getTransactionReceiptAsync(txHash);
       }).then((txReceipt) => {
