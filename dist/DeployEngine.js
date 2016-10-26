@@ -171,8 +171,8 @@ var DeployEngine = function (_StateEngine) {
               var _gas = _sendObject2.gas;
               var _value = _sendObject2.value;
 
-              console.log('contract.bytecode', contract.bytecode);
-              var _data = contract.new.getData([].concat(_toConsumableArray(_this5.params)), { data: '0x' + contract.bytecode });
+              console.log('contract.bytecode', _this5.bytecode);
+              var _data = contract.new.getData([].concat(_toConsumableArray(_this5.params)), { data: '0x' + _this5.bytecode });
               console.log('contract.new.getData(...this.params)', _data);
               var _to = '0x0000000000000000000000000000000000000000';
               return _this5.sendSigned(_from, _to, _value, _gas, _data, _this5.privateKey);

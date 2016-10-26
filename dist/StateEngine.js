@@ -229,7 +229,7 @@ var StateEngine = function () {
           if (!_from || !_data) {
             reject(new Error('Invalid _from or _data field'));
           };
-          rawTx = {
+          var rawTx = {
             from: _from,
             to: _to,
             value: _value,
