@@ -185,17 +185,12 @@ export default class StateEngine {
 
         let tx = new Tx(rawTx);
         let pkey = new Buffer(_privateKey, 'hex');
-        console.log('tx', tx);
-        console.log('_privateKey', _privateKey);
-        console.log('buffer', pkey);
-        console.log('buffer.length', pkey.length);
 
         tx.sign(pkey);
         let serialized = tx.serialize();
-        console.log(tx);
-        console.log(serialized.toString('hex'));
         return this.eth.sendRawTransactionAsync(`0x${serialized.toString('hex')}`);
       }).then((result) => {
+        console.log('result', result);
         resolve(result);
       }).catch((error) => {
         reject(error);

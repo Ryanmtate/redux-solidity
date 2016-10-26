@@ -241,17 +241,12 @@ var StateEngine = function () {
 
           var tx = new _ethereumjsTx2.default(rawTx);
           var pkey = new Buffer(_privateKey, 'hex');
-          console.log('tx', tx);
-          console.log('_privateKey', _privateKey);
-          console.log('buffer', pkey);
-          console.log('buffer.length', pkey.length);
 
           tx.sign(pkey);
           var serialized = tx.serialize();
-          console.log(tx);
-          console.log(serialized.toString('hex'));
           return _this8.eth.sendRawTransactionAsync('0x' + serialized.toString('hex'));
         }).then(function (result) {
+          console.log('result', result);
           resolve(result);
         }).catch(function (error) {
           reject(error);
