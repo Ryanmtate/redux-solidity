@@ -122,18 +122,15 @@ export default class DeployEngine extends StateEngine {
         };
       }).then((result) => {
         if (!result['transactionHash']) {
-          console.log('result', result);
           return this.getTransactionReceipt(result);
         } else {
           return this.getTransactionReceipt(result['transactionHash']);
         }
       }).then((txReceipt) => {
-        console.log('txReceipt', txReceipt);
         this.deployed['txReceipt'] = txReceipt;
         this.deployed['bytecode'] = this.bytecode;
         this.deployed['runtimeBytecode'] = this.bytecode;
         this.address = txReceipt['contractAddress'];
-        console.log('this.deployed', this.deployed);
         return this.saveDeployed();
       }).then((saved) => {
         this.contract = this.eth.contract(this.abi).at(this.address);

@@ -178,18 +178,15 @@ var DeployEngine = function (_StateEngine) {
           };
         }).then(function (result) {
           if (!result['transactionHash']) {
-            console.log('result', result);
             return _this5.getTransactionReceipt(result);
           } else {
             return _this5.getTransactionReceipt(result['transactionHash']);
           }
         }).then(function (txReceipt) {
-          console.log('txReceipt', txReceipt);
           _this5.deployed['txReceipt'] = txReceipt;
           _this5.deployed['bytecode'] = _this5.bytecode;
           _this5.deployed['runtimeBytecode'] = _this5.bytecode;
           _this5.address = txReceipt['contractAddress'];
-          console.log('this.deployed', _this5.deployed);
           return _this5.saveDeployed();
         }).then(function (saved) {
           _this5.contract = _this5.eth.contract(_this5.abi).at(_this5.address);
