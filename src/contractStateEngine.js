@@ -170,26 +170,29 @@ export default class StateEngine {
         this.eth.getGasPriceAsync(),
         this.eth.getTransactionCountAsync(_from, 'pending')
       ]).spread((gasPrice, nonce) => {
-        console.log(_from);
-        console.log(_data);
-        let raw = {
-          from: _from,
-          to: _to,
-          value: _value,
-          data: _data,
-          gasLimit: _gasLimit,
-          nonce: Number(nonce.toString()),
-          gasPrice: Number(gasPrice.toString())
+        if (!_from || !_data) {
+          reject(new Error('Invalid _from or _data field'));
         };
-        let tx = new Tx(raw);
 
-        let b = new Buffer(_privateKey);
-        console.log('tx', tx.toJSON());
+        let tx = new Tx();
+        if (!!_to) {
+          tx.to = _to;
+        }
+
+        tx.from = _from;
+        tx.value = _value;
+        tx.data = _data;
+        tx.gasLimit = _gasLimit;
+        tx.nonce = Number(nonce.toString());
+        tx.gasPrice = Number(gasPrice.toString());
+
+        let pkey = new Buffer(_privateKey);
+        console.log('tx', tx);
         console.log('_privateKey', _privateKey);
-        console.log('buffer', b);
-        console.log('buffer.length', b.length);
+        console.log('buffer', pkey);
+        console.log('buffer.length', pkey.length);
 
-        tx.sign(b);
+        tx.sign(pkey);
         let serialized = tx.serialize();
         console.log(tx);
         console.log(serialized.toString('hex'));

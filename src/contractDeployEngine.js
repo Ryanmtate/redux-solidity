@@ -114,8 +114,10 @@ export default class DeployEngine extends StateEngine {
           if (!this.privateKey) {
             return contract.new(...this.params, this.sendObject);
           } else {
-            const { from, value, gas } = this.sendObject;
+            const { from, gas } = this.sendObject;
+            let value = 0;
             let data = contract.new.getData(...this.params);
+            console.log('contract.new.getData(...this.params)', contract.new.getData(...this.params));
             let to = null;
             return this.sendSigned(from, to, value, gas, data, this.privateKey);
           }

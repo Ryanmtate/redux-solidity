@@ -166,14 +166,15 @@ var DeployEngine = function (_StateEngine) {
             if (!_this5.privateKey) {
               return contract.new.apply(contract, _toConsumableArray(_this5.params).concat([_this5.sendObject]));
             } else {
-              var _contract$new;
+              var _contract$new, _contract$new2;
 
               var _sendObject2 = _this5.sendObject;
               var _from = _sendObject2.from;
-              var _value = _sendObject2.value;
               var _gas = _sendObject2.gas;
 
+              var _value = 0;
               var _data = (_contract$new = contract.new).getData.apply(_contract$new, _toConsumableArray(_this5.params));
+              console.log('contract.new.getData(...this.params)', (_contract$new2 = contract.new).getData.apply(_contract$new2, _toConsumableArray(_this5.params)));
               var _to = null;
               return _this5.sendSigned(_from, _to, _value, _gas, _data, _this5.privateKey);
             }

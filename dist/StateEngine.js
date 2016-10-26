@@ -226,26 +226,29 @@ var StateEngine = function () {
 
       return new _bluebird2.default(function (resolve, reject) {
         _bluebird2.default.resolve([_this8.eth.getGasPriceAsync(), _this8.eth.getTransactionCountAsync(_from, 'pending')]).spread(function (gasPrice, nonce) {
-          console.log(_from);
-          console.log(_data);
-          var raw = {
-            from: _from,
-            to: _to,
-            value: _value,
-            data: _data,
-            gasLimit: _gasLimit,
-            nonce: Number(nonce.toString()),
-            gasPrice: Number(gasPrice.toString())
+          if (!_from || !_data) {
+            reject(new Error('Invalid _from or _data field'));
           };
-          var tx = new _ethereumjsTx2.default(raw);
 
-          var b = new Buffer(_privateKey);
-          console.log('tx', tx.toJSON());
+          var tx = new _ethereumjsTx2.default();
+          if (!!_to) {
+            tx.to = _to;
+          }
+
+          tx.from = _from;
+          tx.value = _value;
+          tx.data = _data;
+          tx.gasLimit = _gasLimit;
+          tx.nonce = Number(nonce.toString());
+          tx.gasPrice = Number(gasPrice.toString());
+
+          var pkey = new Buffer(_privateKey);
+          console.log('tx', tx);
           console.log('_privateKey', _privateKey);
-          console.log('buffer', b);
-          console.log('buffer.length', b.length);
+          console.log('buffer', pkey);
+          console.log('buffer.length', pkey.length);
 
-          tx.sign(b);
+          tx.sign(pkey);
           var serialized = tx.serialize();
           console.log(tx);
           console.log(serialized.toString('hex'));
