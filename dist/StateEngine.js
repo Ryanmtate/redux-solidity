@@ -222,8 +222,10 @@ var StateEngine = function () {
   }, {
     key: 'sendSigned',
     value: function sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey) {
+      var _this8 = this;
+
       return new _bluebird2.default(function (resolve, reject) {
-        _bluebird2.default.resolve([eth.getGasPriceAsync(), eth.getTransactionCountAsync(_from, 'pending')]).spread(function (gasPrice, nonce) {
+        _bluebird2.default.resolve([_this8.eth.getGasPriceAsync(), _this8.eth.getTransactionCountAsync(_from, 'pending')]).spread(function (gasPrice, nonce) {
           var tx = new _ethereumjsTx2.default();
           _from ? tx.from = _from : reject(new Error('Missing from address'));
           _to ? tx.to = _to : null;
@@ -233,7 +235,7 @@ var StateEngine = function () {
           tx.nonce = Number(nonce.toString());
           tx.gasPrice = Number(gasPrice.toString());
           tx.sign(_privateKey);
-          return eth.sendRawTransactionAsync(tx.serialize().toString('hex'));
+          return _this8.eth.sendRawTransactionAsync(tx.serialize().toString('hex'));
         }).then(function (result) {
           resolve(result);
         }).catch(function (error) {
@@ -244,22 +246,22 @@ var StateEngine = function () {
   }, {
     key: 'send',
     value: function send(method, params, value) {
-      var _this8 = this;
+      var _this9 = this;
 
       return function (dispatch) {
         var type = method.replace(/([A-Z])/g, '_$1').toUpperCase();
 
-        _this8.actionTypes().then(function (types) {
+        _this9.actionTypes().then(function (types) {
           if (types.indexOf(type) == -1) {
             var error = new Error('METHOD NOT FOUND: ' + method);
             throw error;
           } else {
-            return _this8.promisify();
+            return _this9.promisify();
           }
         }).then(function (contract) {
-          _this8.contract = contract;
+          _this9.contract = contract;
           var numInputs = void 0;
-          var inputs = Object.keys(_this8.contract[method])[5];
+          var inputs = Object.keys(_this9.contract[method])[5];
 
           if (inputs.length) {
             if (inputs.match(/,/g)) {
@@ -275,41 +277,41 @@ var StateEngine = function () {
           } else {
             var _contract$method;
 
-            _this8.sendObject['value'] = value || 0;
-            return (_contract$method = _this8.contract[method]).sendTransactionAsync.apply(_contract$method, _toConsumableArray(params).concat([_this8.sendObject]));
+            _this9.sendObject['value'] = value || 0;
+            return (_contract$method = _this9.contract[method]).sendTransactionAsync.apply(_contract$method, _toConsumableArray(params).concat([_this9.sendObject]));
           }
         }).then(function (txHash) {
-          dispatch({ type: type, result: txHash, method: '_' + method, contract: _this8.address });
-          return _this8.getTransactionReceipt(txHash);
+          dispatch({ type: type, result: txHash, method: '_' + method, contract: _this9.address });
+          return _this9.getTransactionReceipt(txHash);
         }).then(function (result) {
-          dispatch({ type: type, result: result, method: '_' + method, contract: _this8.address });
+          dispatch({ type: type, result: result, method: '_' + method, contract: _this9.address });
           return _bluebird2.default.delay(15000);
         }).then(function () {
-          dispatch({ type: type, result: undefined, method: '_' + method, contract: _this8.address });
+          dispatch({ type: type, result: undefined, method: '_' + method, contract: _this9.address });
         }).catch(function (error) {
-          dispatch({ type: type, result: error, method: '_' + method, contract: _this8.address });
+          dispatch({ type: type, result: error, method: '_' + method, contract: _this9.address });
         });
       };
     }
   }, {
     key: 'call',
     value: function call(method, params) {
-      var _this9 = this;
+      var _this10 = this;
 
       return function (dispatch) {
         var type = method.replace(/([A-Z])/g, '_$1').toUpperCase();
 
-        _this9.actionTypes().then(function (types) {
+        _this10.actionTypes().then(function (types) {
           if (types.indexOf(type) == -1) {
             var error = new Error('METHOD NOT FOUND: ' + method);
             throw error;
           } else {
-            return _this9.promisify();
+            return _this10.promisify();
           }
         }).then(function (contract) {
-          _this9.contract = contract;
+          _this10.contract = contract;
           var numInputs = 0;
-          var inputs = Object.keys(_this9.contract[method])[5];
+          var inputs = Object.keys(_this10.contract[method])[5];
 
           if (inputs.length) {
             if (inputs.match(/,/g)) {
@@ -325,10 +327,10 @@ var StateEngine = function () {
           } else {
             var _contract$method2;
 
-            return (_contract$method2 = _this9.contract[method]).callAsync.apply(_contract$method2, _toConsumableArray(params).concat([_this9.sendObject]));
+            return (_contract$method2 = _this10.contract[method]).callAsync.apply(_contract$method2, _toConsumableArray(params).concat([_this10.sendObject]));
           }
         }).then(function (result) {
-          dispatch({ type: type, result: result, method: '_' + method, contract: _this9.address });
+          dispatch({ type: type, result: result, method: '_' + method, contract: _this10.address });
         }).catch(function (error) {
           throw error;
         });
@@ -363,11 +365,11 @@ var StateEngine = function () {
   }, {
     key: 'actionTypes',
     value: function actionTypes() {
-      var _this10 = this;
+      var _this11 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
         var Types = [];
-        _this10.abiNames().map(function (abi) {
+        _this11.abiNames().map(function (abi) {
           var type = abi.replace(/([A-Z])/g, '_$1').toUpperCase();
           Types.push(type);
         }).then(function () {
@@ -380,21 +382,21 @@ var StateEngine = function () {
   }, {
     key: 'getState',
     value: function getState() {
-      var _this11 = this;
+      var _this12 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
         var State = new Object();
-        _this11.promisify().then(function (Contract) {
-          _this11.contract = Contract;
-          return _this11.abi;
+        _this12.promisify().then(function (Contract) {
+          _this12.contract = Contract;
+          return _this12.abi;
         }).map(function (abi) {
-          if (_this11.contract[abi['name']] && _this11.contract[abi['name']]['callAsync'] && abi['inputs'].length == 0) {
-            return join(abi['name'], _this11.contract[abi['name']].callAsync(), function (name, state) {
+          if (_this12.contract[abi['name']] && _this12.contract[abi['name']]['callAsync'] && abi['inputs'].length == 0) {
+            return join(abi['name'], _this12.contract[abi['name']].callAsync(), function (name, state) {
               State[name] = state;
             });
           }
         }).then(function () {
-          _this11.state = State;
+          _this12.state = State;
           resolve(State);
         }).catch(function (error) {
           reject(error);
@@ -404,21 +406,21 @@ var StateEngine = function () {
   }, {
     key: 'initDeployed',
     value: function initDeployed(deployed) {
-      var _this12 = this;
+      var _this13 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
         if (!deployed || !deployed['interface'] || !deployed['txReceipt']) {
           var error = new Error('Invalid deployed object provided. Deployed object must have an interface and txReceipt object. Use .deploy() to generate first.');
           reject(error);
         } else {
-          _this12.abi = JSON.parse(deployed['interface']);
-          _this12.address = deployed['txReceipt']['contractAddress'];
-          _this12.deployedBlockNumber = deployed['txReceipt']['blockNumber'];
-          _this12.contract = _this12.eth.contract(_this12.abi).at(_this12.address);
-          _this12.events = _this12.contract.allEvents({ fromBlock: _this12.deployedBlockNumber, toBlock: 'latest' });
-          _this12.promisify().then(function (contract) {
-            _this12.contract = contract;
-            resolve(_this12.contract);
+          _this13.abi = JSON.parse(deployed['interface']);
+          _this13.address = deployed['txReceipt']['contractAddress'];
+          _this13.deployedBlockNumber = deployed['txReceipt']['blockNumber'];
+          _this13.contract = _this13.eth.contract(_this13.abi).at(_this13.address);
+          _this13.events = _this13.contract.allEvents({ fromBlock: _this13.deployedBlockNumber, toBlock: 'latest' });
+          _this13.promisify().then(function (contract) {
+            _this13.contract = contract;
+            resolve(_this13.contract);
           }).catch(function (error) {
             reject(error);
           });
@@ -428,23 +430,23 @@ var StateEngine = function () {
   }, {
     key: 'initState',
     value: function initState() {
-      var _this13 = this;
+      var _this14 = this;
 
       return function (dispatch) {
         var State = new Object();
         State['LOGS'] = {};
-        _bluebird2.default.resolve(_this13.abi).map(function (abi) {
+        _bluebird2.default.resolve(_this14.abi).map(function (abi) {
           if (abi['type'] == 'function') {
             State[abi['name']] = {};
           } else if (abi['type'] == 'event') {
             State['LOGS'][abi['name']] = [];
           }
         }).then(function () {
-          return _this13.getState();
+          return _this14.getState();
         }).then(function (state) {
           State = _extends({}, State, state);
 
-          dispatch({ type: 'INIT_STATE', result: State, contract: _this13.address });
+          dispatch({ type: 'INIT_STATE', result: State, contract: _this14.address });
           return null;
         }).catch(function (error) {
           throw error;

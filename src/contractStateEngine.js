@@ -167,8 +167,8 @@ export default class StateEngine {
   sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey) {
     return new Promise((resolve, reject) => {
       Promise.resolve([
-        eth.getGasPriceAsync(),
-        eth.getTransactionCountAsync(_from, 'pending')
+        this.eth.getGasPriceAsync(),
+        this.eth.getTransactionCountAsync(_from, 'pending')
       ]).spread((gasPrice, nonce) => {
         let tx = new Tx();
         _from ? tx.from = _from : reject(new Error('Missing from address'));
@@ -179,7 +179,7 @@ export default class StateEngine {
         tx.nonce = Number(nonce.toString());
         tx.gasPrice = Number(gasPrice.toString());
         tx.sign(_privateKey);
-        return eth.sendRawTransactionAsync(tx.serialize().toString('hex'));
+        return this.eth.sendRawTransactionAsync(tx.serialize().toString('hex'));
       }).then((result) => {
         resolve(result);
       }).catch((error) => {
