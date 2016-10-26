@@ -166,13 +166,13 @@ export default class StateEngine {
 
   sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey) {
     return new Promise((resolve, reject) => {
+      if (!_from || !_data) {
+        reject(new Error('Invalid _from or _data field'));
+      };
       Promise.resolve([
         this.eth.getGasPriceAsync(),
-        this.eth.getTransactionCountAsync(_from, 'pending')
+        this.eth.getTransactionCountAsync(_from)
       ]).spread((gasPrice, nonce) => {
-        if (!_from || !_data) {
-          reject(new Error('Invalid _from or _data field'));
-        };
         let rawTx = {
           from: _from,
           to: _to,

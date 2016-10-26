@@ -225,10 +225,10 @@ var StateEngine = function () {
       var _this8 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
-        _bluebird2.default.resolve([_this8.eth.getGasPriceAsync(), _this8.eth.getTransactionCountAsync(_from, 'pending')]).spread(function (gasPrice, nonce) {
-          if (!_from || !_data) {
-            reject(new Error('Invalid _from or _data field'));
-          };
+        if (!_from || !_data) {
+          reject(new Error('Invalid _from or _data field'));
+        };
+        _bluebird2.default.resolve([_this8.eth.getGasPriceAsync(), _this8.eth.getTransactionCountAsync(_from)]).spread(function (gasPrice, nonce) {
           var rawTx = {
             from: _from,
             to: _to,
