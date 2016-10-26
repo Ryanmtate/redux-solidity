@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
 import async from 'async';
-import Tx from 'ethereum-js';
+import Tx from 'ethereumjs-tx';
 const join = Promise.join;
 const using = Promise.using;
 

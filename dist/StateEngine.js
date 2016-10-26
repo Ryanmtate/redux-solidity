@@ -16,9 +16,9 @@ var _async = require('async');
 
 var _async2 = _interopRequireDefault(_async);
 
-var _ethereumJs = require('ethereum-js');
+var _ethereumjsTx = require('ethereumjs-tx');
 
-var _ethereumJs2 = _interopRequireDefault(_ethereumJs);
+var _ethereumjsTx2 = _interopRequireDefault(_ethereumjsTx);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -224,7 +224,7 @@ var StateEngine = function () {
     value: function sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey) {
       return new _bluebird2.default(function (resolve, reject) {
         _bluebird2.default.resolve([eth.getGasPriceAsync(), eth.getTransactionCountAsync(_from, 'pending')]).spread(function (gasPrice, nonce) {
-          var tx = new _ethereumJs2.default();
+          var tx = new _ethereumjsTx2.default();
           _from ? tx.from = _from : reject(new Error('Missing from address'));
           _to ? tx.to = _to : null;
           _value ? tx.value = _value : tx.value = 0;

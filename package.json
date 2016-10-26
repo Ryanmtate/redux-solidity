@@ -1,6 +1,6 @@
 {
   "name": "redux-solidity",
-  "version": "0.6.0",
+  "version": "0.6.01",
   "description": "Solidity contract Compile, Deploy, Redux State Engine Utilities",
   "main": "dist/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "test-state-engine": "babel-node ./tests/StateEngine/test.js --presets es2015,stage-0",
     "transpile-deploy": "babel ./src/contractDeployEngine.js --out-file ./dist/DeployEngine.js --presets es2015,stage-0",
     "transpile-state": "babel ./src/contractStateEngine.js --out-file ./dist/StateEngine.js --presets es2015,stage-0",
-    "transpile" : "npm run transpile-state && npm run transpile-deploy",
+    "transpile": "npm run transpile-state && npm run transpile-deploy",
     "push": "npm run transpile && git add . && git commit -m 'This is automated... read the logs for the changes' && git push -u origin master && npm publish"
   },
   "keywords": [
@@ -23,6 +23,7 @@
   "dependencies": {
     "async": "^2.0.1",
     "bluebird": "^3.4.1",
+    "ethereumjs-tx": "^1.1.2",
     "jsonfile": "^2.3.1",
     "solc": "^0.4.2",
     "web3": "^0.17.0-alpha"
