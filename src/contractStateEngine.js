@@ -189,8 +189,8 @@ export default class StateEngine {
         tx.sign(b);
         let serialized = tx.serialize();
         console.log(tx);
-        console.log(serialized);
-        return this.eth.sendRawTransactionAsync(serialized.toString('hex'));
+        console.log(serialized.toString('hex'));
+        return this.eth.sendRawTransactionAsync(`0x${serialized.toString('hex')}`);
       }).then((result) => {
         resolve(result);
       }).catch((error) => {
