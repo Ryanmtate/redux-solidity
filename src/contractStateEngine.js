@@ -181,12 +181,12 @@ export default class StateEngine {
         });
 
         let b = new Buffer(_privateKey);
-
+        console.log('tx', tx.toJSON());
         console.log('_privateKey', _privateKey);
         console.log('buffer', b);
         console.log('buffer.length', b.length);
 
-        tx.sign(new Buffer(_privateKey));
+        tx.sign(b);
         let serialized = tx.serialize();
         console.log(tx);
         console.log(serialized);
