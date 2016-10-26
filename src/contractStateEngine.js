@@ -179,6 +179,7 @@ export default class StateEngine {
           nonce: Number(nonce.toString()),
           gasPrice: Number(gasPrice.toString())
         });
+        console.log('_privateKey', _privateKey);
         tx.sign(new Buffer(_privateKey));
         let serialized = tx.serialize();
         console.log(tx);
