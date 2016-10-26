@@ -246,7 +246,6 @@ var StateEngine = function () {
           var serialized = tx.serialize();
           return _this8.eth.sendRawTransactionAsync('0x' + serialized.toString('hex'));
         }).then(function (result) {
-          console.log('result', result);
           resolve(result);
         }).catch(function (error) {
           reject(error);

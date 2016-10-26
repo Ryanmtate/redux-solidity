@@ -179,7 +179,11 @@ var DeployEngine = function (_StateEngine) {
             }
           };
         }).then(function (result) {
-          return _this5.getTransactionReceipt(result['transactionHash']);
+          if (!result['transactionHash']) {
+            return _this5.getTransactionReceipt(result);
+          } else {
+            return _this5.getTransactionReceipt(result['transactionHash']);
+          }
         }).then(function (txReceipt) {
           _this5.deployed['txReceipt'] = txReceipt;
           _this5.deployed['bytecode'] = _this5.bytecode;

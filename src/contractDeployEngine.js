@@ -123,7 +123,11 @@ export default class DeployEngine extends StateEngine {
           }
         };
       }).then((result) => {
-        return this.getTransactionReceipt(result['transactionHash']);
+        if (!result['transactionHash']) {
+          return this.getTransactionReceipt(result);
+        } else {
+          return this.getTransactionReceipt(result['transactionHash']);
+        }
       }).then((txReceipt) => {
         this.deployed['txReceipt'] = txReceipt;
         this.deployed['bytecode'] = this.bytecode;
