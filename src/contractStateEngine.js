@@ -181,7 +181,7 @@ export default class StateEngine {
           gasLimit: _gasLimit,
           nonce: Number(nonce.toString()),
           gasPrice: Number(gasPrice.toString()),
-        }
+        };
 
         let tx = new Tx(rawTx);
         let pkey = new Buffer(_privateKey, 'hex');
