@@ -204,7 +204,7 @@ var StateEngine = function () {
         if (counter > 30) {
           reject(new Error('Could not find transaction receipt.'));
         }
-        _bluebird2.default.delay(2000).then(function () {
+        _bluebird2.default.delay(10000).then(function () {
           return _this7.eth.getTransactionReceiptAsync(txHash);
         }).then(function (txReceipt) {
           if (!txReceipt) {
