@@ -112,7 +112,6 @@ var DeployEngine = function (_StateEngine) {
 
       return new _bluebird2.default(function (resolve, reject) {
         _bluebird2.default.resolve(fs.existsSync(_this4.compiledDir + '/compiled.json')).then(function (exists) {
-          console.log('exists', exists);
           if (!exists) {
             resolve(null);
           } else {
