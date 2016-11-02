@@ -135,12 +135,14 @@ var DeployEngine = function (_StateEngine) {
       return new _bluebird2.default(function (resolve, reject) {
         _this5.deployed = new Object();
         _this5.getCompiled().then(function (compiled) {
+          console.log('compiled', compiled);
           if (!compiled) {
             return _this5.compile();
           } else {
             return compiled;
           }
         }).then(function (compiled) {
+          console.log('compiled', compiled);
           _this5.deployed = compiled['contracts'][_this5.contractName];
           _this5.abi = JSON.parse(compiled['contracts'][_this5.contractName]['interface']);
           return _this5.linkBytecode(compiled['contracts'][_this5.contractName]['bytecode']);

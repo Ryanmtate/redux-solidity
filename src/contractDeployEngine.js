@@ -87,12 +87,14 @@ export default class DeployEngine extends StateEngine {
     return new Promise((resolve, reject) => {
       this.deployed = new Object();
       this.getCompiled().then((compiled) => {
+        console.log('compiled', compiled);
         if (!compiled) {
           return this.compile();
         } else {
           return compiled;
         }
       }).then((compiled) => {
+        console.log('compiled', compiled);
         this.deployed = compiled['contracts'][this.contractName];
         this.abi = JSON.parse(compiled['contracts'][this.contractName]['interface']);
         return this.linkBytecode(compiled['contracts'][this.contractName]['bytecode']);
