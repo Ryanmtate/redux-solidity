@@ -106,7 +106,7 @@ export default class DeployEngine extends StateEngine {
             return contract.new(this.sendObject);
           } else {
             const { from, value, gas } = this.sendObject;
-            let data = contract.new.getData();
+            let data = contract.new.getData({data : `0x${this.bytecode}`});
             let to = null;
             return this.sendSigned(from, to, value, gas, data, this.privateKey);
           }
@@ -114,7 +114,7 @@ export default class DeployEngine extends StateEngine {
           if (!this.privateKey) {
             return contract.new(...this.params, this.sendObject);
           } else {
-            const { from, gas, value } = this.sendObject;
+            const { from, value, gas } = this.sendObject;
             let data = contract.new.getData(...this.params, {data : `0x${this.bytecode}`});
             let to = null;
             return this.sendSigned(from, to, value, gas, data, this.privateKey);
