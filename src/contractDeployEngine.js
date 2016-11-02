@@ -68,7 +68,7 @@ export default class DeployEngine extends StateEngine {
     return new Promise((resolve, reject) => {
       Promise.resolve(fs.existsSync(`${this.compiledDir}/compiled.json`)).then((exists) => {
         if(!exists){
-          resolve(undefined);
+          resolve(this.compiled);
         } else {
           return jsonfile.readFileAsync(`${this.compiledDir}/compiled.json`);
         }
