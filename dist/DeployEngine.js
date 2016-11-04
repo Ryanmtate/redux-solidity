@@ -71,6 +71,7 @@ var DeployEngine = function (_StateEngine) {
         }).then(function () {
           return _solc2.default.compile({ sources: sources }, 1);
         }).then(function (compiled) {
+          console.log('compiled', compiled);
           if (!compiled.contracts) {
             reject(compiled);
           } else {
