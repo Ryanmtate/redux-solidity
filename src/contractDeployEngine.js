@@ -20,7 +20,7 @@ export default class DeployEngine extends StateEngine {
     this.libraries = options.libraries || {};
   }
 
-  compile(directory) {
+  compile() {
     return new Promise((resolve, reject) => {
       let sources = new Object();
       fs.readdirAsync(`${this.contractDir}`).map((file) => {
@@ -30,7 +30,7 @@ export default class DeployEngine extends StateEngine {
           });
         }
       }).then(() => {
-        return solc.compile({sources : sources}, 1);
+        return solc.compile({sources: sources}, 1);
       }).then((compiled) => {
         if(!compiled.contracts){
           reject(compiled);
@@ -68,7 +68,7 @@ export default class DeployEngine extends StateEngine {
     return new Promise((resolve, reject) => {
       Promise.resolve(fs.existsSync(`${this.compiledDir}/compiled.json`)).then((exists) => {
         if(!exists){
-          resolve(null);
+          this.compiled ? resolve(this.compiled) : resolve(null);
         } else {
           return jsonfile.readFileAsync(`${this.compiledDir}/compiled.json`);
         }

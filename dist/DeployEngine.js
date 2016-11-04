@@ -57,7 +57,7 @@ var DeployEngine = function (_StateEngine) {
 
   _createClass(DeployEngine, [{
     key: 'compile',
-    value: function compile(directory) {
+    value: function compile() {
       var _this2 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
@@ -113,7 +113,7 @@ var DeployEngine = function (_StateEngine) {
       return new _bluebird2.default(function (resolve, reject) {
         _bluebird2.default.resolve(fs.existsSync(_this4.compiledDir + '/compiled.json')).then(function (exists) {
           if (!exists) {
-            resolve(null);
+            _this4.compiled ? resolve(_this4.compiled) : resolve(null);
           } else {
             return jsonfile.readFileAsync(_this4.compiledDir + '/compiled.json');
           }
