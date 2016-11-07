@@ -174,7 +174,7 @@ export default class StateEngine {
         let error = new Error('Invalid Contract Method or Parameters');
         reject(error);
       } else {
-        let data = this.contract[method].getData(..._params);
+        let data = this.contract[_method].getData(..._params);
         Promise.resolve([
           this.eth.getGasPriceAsync(),
           this.eth.getTransactionCountAsync(_from)

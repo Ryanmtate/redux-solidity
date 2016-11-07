@@ -234,9 +234,9 @@ var StateEngine = function () {
           reject(error);
         } else {
           (function () {
-            var _contract$method;
+            var _contract$_method;
 
-            var data = (_contract$method = _this8.contract[method]).getData.apply(_contract$method, _toConsumableArray(_params));
+            var data = (_contract$_method = _this8.contract[_method]).getData.apply(_contract$_method, _toConsumableArray(_params));
             _bluebird2.default.resolve([_this8.eth.getGasPriceAsync(), _this8.eth.getTransactionCountAsync(_from)]).spread(function (gasPrice, nonce) {
               var rawTx = {
                 from: from,
@@ -321,10 +321,10 @@ var StateEngine = function () {
             var error = new Error('Invalid Number of Inputs. Expected ' + numInputs + ' inputs, but found ' + params.length + '.');
             throw error;
           } else {
-            var _contract$method2;
+            var _contract$method;
 
             _this10.sendObject['value'] = value || 0;
-            return (_contract$method2 = _this10.contract[method]).sendTransactionAsync.apply(_contract$method2, _toConsumableArray(params).concat([_this10.sendObject]));
+            return (_contract$method = _this10.contract[method]).sendTransactionAsync.apply(_contract$method, _toConsumableArray(params).concat([_this10.sendObject]));
           }
         }).then(function (txHash) {
           dispatch({ type: type, result: txHash, method: '_' + method, contract: _this10.address });
@@ -371,9 +371,9 @@ var StateEngine = function () {
             var error = new Error('Invalid Number of Inputs. Expected ' + numInputs + ' inputs, but found ' + params.length + '.');
             throw error;
           } else {
-            var _contract$method3;
+            var _contract$method2;
 
-            return (_contract$method3 = _this11.contract[method]).callAsync.apply(_contract$method3, _toConsumableArray(params).concat([_this11.sendObject]));
+            return (_contract$method2 = _this11.contract[method]).callAsync.apply(_contract$method2, _toConsumableArray(params).concat([_this11.sendObject]));
           }
         }).then(function (result) {
           dispatch({ type: type, result: result, method: '_' + method, contract: _this11.address });
