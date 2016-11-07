@@ -220,15 +220,52 @@ var StateEngine = function () {
       });
     }
   }, {
+    key: 'generateRawTx',
+    value: function generateRawTx(_from, _to, _value, _gasLimit, _method, _params) {
+      var _this8 = this;
+
+      return new _bluebird2.default(function (resolve, reject) {
+        var from = _from || _this8.eth.accounts[0];
+        var value = _value || 0;
+        var to = _to || _this8.contract.address;
+        var gasLimit = _gasLimit || 4712388;
+        if (!_this8.contract[_method] || !_params) {
+          var error = new Error('Invalid Contract Method or Parameters');
+          reject(error);
+        } else {
+          (function () {
+            var _contract$method;
+
+            var data = (_contract$method = _this8.contract[method]).getData.apply(_contract$method, _toConsumableArray(_params));
+            _bluebird2.default.resolve([_this8.eth.getGasPriceAsync(), _this8.eth.getTransactionCountAsync(_from)]).spread(function (gasPrice, nonce) {
+              var rawTx = {
+                from: from,
+                to: to,
+                value: value,
+                data: data,
+                gasLimit: gasLimit,
+                nonce: Number(nonce.toString()),
+                gasPrice: Number(gasPrice.toString())
+              };
+
+              resolve(rawTx);
+            }).catch(function (error) {
+              reject(error);
+            });
+          })();
+        }
+      });
+    }
+  }, {
     key: 'sendSigned',
     value: function sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey) {
-      var _this8 = this;
+      var _this9 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
         if (!_from || !_data) {
           reject(new Error('Invalid _from or _data field'));
         };
-        _bluebird2.default.resolve([_this8.eth.getGasPriceAsync(), _this8.eth.getTransactionCountAsync(_from)]).spread(function (gasPrice, nonce) {
+        _bluebird2.default.resolve([_this9.eth.getGasPriceAsync(), _this9.eth.getTransactionCountAsync(_from)]).spread(function (gasPrice, nonce) {
           var rawTx = {
             from: _from,
             to: _to,
@@ -244,7 +281,7 @@ var StateEngine = function () {
 
           tx.sign(pkey);
           var serialized = tx.serialize();
-          return _this8.eth.sendRawTransactionAsync('0x' + serialized.toString('hex'));
+          return _this9.eth.sendRawTransactionAsync('0x' + serialized.toString('hex'));
         }).then(function (result) {
           resolve(result);
         }).catch(function (error) {
@@ -255,56 +292,6 @@ var StateEngine = function () {
   }, {
     key: 'send',
     value: function send(method, params, value) {
-      var _this9 = this;
-
-      return function (dispatch) {
-        var type = method.replace(/([A-Z])/g, '_$1').toUpperCase();
-
-        _this9.actionTypes().then(function (types) {
-          if (types.indexOf(type) == -1) {
-            var error = new Error('METHOD NOT FOUND: ' + method);
-            throw error;
-          } else {
-            return _this9.promisify();
-          }
-        }).then(function (contract) {
-          _this9.contract = contract;
-          var numInputs = void 0;
-          var inputs = Object.keys(_this9.contract[method])[5];
-
-          if (inputs.length) {
-            if (inputs.match(/,/g)) {
-              numInputs = inputs.match(/,/g).length + 1;
-            } else {
-              numInputs = 1;
-            }
-          }
-
-          if (numInputs != params.length) {
-            var error = new Error('Invalid Number of Inputs. Expected ' + numInputs + ' inputs, but found ' + params.length + '.');
-            throw error;
-          } else {
-            var _contract$method;
-
-            _this9.sendObject['value'] = value || 0;
-            return (_contract$method = _this9.contract[method]).sendTransactionAsync.apply(_contract$method, _toConsumableArray(params).concat([_this9.sendObject]));
-          }
-        }).then(function (txHash) {
-          dispatch({ type: type, result: txHash, method: '_' + method, contract: _this9.address });
-          return _this9.getTransactionReceipt(txHash);
-        }).then(function (result) {
-          dispatch({ type: type, result: result, method: '_' + method, contract: _this9.address });
-          return _bluebird2.default.delay(15000);
-        }).then(function () {
-          dispatch({ type: type, result: undefined, method: '_' + method, contract: _this9.address });
-        }).catch(function (error) {
-          dispatch({ type: type, result: error, method: '_' + method, contract: _this9.address });
-        });
-      };
-    }
-  }, {
-    key: 'call',
-    value: function call(method, params) {
       var _this10 = this;
 
       return function (dispatch) {
@@ -319,7 +306,7 @@ var StateEngine = function () {
           }
         }).then(function (contract) {
           _this10.contract = contract;
-          var numInputs = 0;
+          var numInputs = void 0;
           var inputs = Object.keys(_this10.contract[method])[5];
 
           if (inputs.length) {
@@ -336,10 +323,60 @@ var StateEngine = function () {
           } else {
             var _contract$method2;
 
-            return (_contract$method2 = _this10.contract[method]).callAsync.apply(_contract$method2, _toConsumableArray(params).concat([_this10.sendObject]));
+            _this10.sendObject['value'] = value || 0;
+            return (_contract$method2 = _this10.contract[method]).sendTransactionAsync.apply(_contract$method2, _toConsumableArray(params).concat([_this10.sendObject]));
           }
+        }).then(function (txHash) {
+          dispatch({ type: type, result: txHash, method: '_' + method, contract: _this10.address });
+          return _this10.getTransactionReceipt(txHash);
         }).then(function (result) {
           dispatch({ type: type, result: result, method: '_' + method, contract: _this10.address });
+          return _bluebird2.default.delay(15000);
+        }).then(function () {
+          dispatch({ type: type, result: undefined, method: '_' + method, contract: _this10.address });
+        }).catch(function (error) {
+          dispatch({ type: type, result: error, method: '_' + method, contract: _this10.address });
+        });
+      };
+    }
+  }, {
+    key: 'call',
+    value: function call(method, params) {
+      var _this11 = this;
+
+      return function (dispatch) {
+        var type = method.replace(/([A-Z])/g, '_$1').toUpperCase();
+
+        _this11.actionTypes().then(function (types) {
+          if (types.indexOf(type) == -1) {
+            var error = new Error('METHOD NOT FOUND: ' + method);
+            throw error;
+          } else {
+            return _this11.promisify();
+          }
+        }).then(function (contract) {
+          _this11.contract = contract;
+          var numInputs = 0;
+          var inputs = Object.keys(_this11.contract[method])[5];
+
+          if (inputs.length) {
+            if (inputs.match(/,/g)) {
+              numInputs = inputs.match(/,/g).length + 1;
+            } else {
+              numInputs = 1;
+            }
+          }
+
+          if (numInputs != params.length) {
+            var error = new Error('Invalid Number of Inputs. Expected ' + numInputs + ' inputs, but found ' + params.length + '.');
+            throw error;
+          } else {
+            var _contract$method3;
+
+            return (_contract$method3 = _this11.contract[method]).callAsync.apply(_contract$method3, _toConsumableArray(params).concat([_this11.sendObject]));
+          }
+        }).then(function (result) {
+          dispatch({ type: type, result: result, method: '_' + method, contract: _this11.address });
         }).catch(function (error) {
           throw error;
         });
@@ -374,11 +411,11 @@ var StateEngine = function () {
   }, {
     key: 'actionTypes',
     value: function actionTypes() {
-      var _this11 = this;
+      var _this12 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
         var Types = [];
-        _this11.abiNames().map(function (abi) {
+        _this12.abiNames().map(function (abi) {
           var type = abi.replace(/([A-Z])/g, '_$1').toUpperCase();
           Types.push(type);
         }).then(function () {
@@ -391,21 +428,21 @@ var StateEngine = function () {
   }, {
     key: 'getState',
     value: function getState() {
-      var _this12 = this;
+      var _this13 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
         var State = new Object();
-        _this12.promisify().then(function (Contract) {
-          _this12.contract = Contract;
-          return _this12.abi;
+        _this13.promisify().then(function (Contract) {
+          _this13.contract = Contract;
+          return _this13.abi;
         }).map(function (abi) {
-          if (_this12.contract[abi['name']] && _this12.contract[abi['name']]['callAsync'] && abi['inputs'].length == 0) {
-            return join(abi['name'], _this12.contract[abi['name']].callAsync(), function (name, state) {
+          if (_this13.contract[abi['name']] && _this13.contract[abi['name']]['callAsync'] && abi['inputs'].length == 0) {
+            return join(abi['name'], _this13.contract[abi['name']].callAsync(), function (name, state) {
               State[name] = state;
             });
           }
         }).then(function () {
-          _this12.state = State;
+          _this13.state = State;
           resolve(State);
         }).catch(function (error) {
           reject(error);
@@ -415,21 +452,21 @@ var StateEngine = function () {
   }, {
     key: 'initDeployed',
     value: function initDeployed(deployed) {
-      var _this13 = this;
+      var _this14 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
         if (!deployed || !deployed['interface'] || !deployed['txReceipt']) {
           var error = new Error('Invalid deployed object provided. Deployed object must have an interface and txReceipt object. Use .deploy() to generate first.');
           reject(error);
         } else {
-          _this13.abi = JSON.parse(deployed['interface']);
-          _this13.address = deployed['txReceipt']['contractAddress'];
-          _this13.deployedBlockNumber = deployed['txReceipt']['blockNumber'];
-          _this13.contract = _this13.eth.contract(_this13.abi).at(_this13.address);
-          _this13.events = _this13.contract.allEvents({ fromBlock: _this13.deployedBlockNumber, toBlock: 'latest' });
-          _this13.promisify().then(function (contract) {
-            _this13.contract = contract;
-            resolve(_this13.contract);
+          _this14.abi = JSON.parse(deployed['interface']);
+          _this14.address = deployed['txReceipt']['contractAddress'];
+          _this14.deployedBlockNumber = deployed['txReceipt']['blockNumber'];
+          _this14.contract = _this14.eth.contract(_this14.abi).at(_this14.address);
+          _this14.events = _this14.contract.allEvents({ fromBlock: _this14.deployedBlockNumber, toBlock: 'latest' });
+          _this14.promisify().then(function (contract) {
+            _this14.contract = contract;
+            resolve(_this14.contract);
           }).catch(function (error) {
             reject(error);
           });
@@ -439,23 +476,23 @@ var StateEngine = function () {
   }, {
     key: 'initState',
     value: function initState() {
-      var _this14 = this;
+      var _this15 = this;
 
       return function (dispatch) {
         var State = new Object();
         State['LOGS'] = {};
-        _bluebird2.default.resolve(_this14.abi).map(function (abi) {
+        _bluebird2.default.resolve(_this15.abi).map(function (abi) {
           if (abi['type'] == 'function') {
             State[abi['name']] = {};
           } else if (abi['type'] == 'event') {
             State['LOGS'][abi['name']] = [];
           }
         }).then(function () {
-          return _this14.getState();
+          return _this15.getState();
         }).then(function (state) {
           State = _extends({}, State, state);
 
-          dispatch({ type: 'INIT_STATE', result: State, contract: _this14.address });
+          dispatch({ type: 'INIT_STATE', result: State, contract: _this15.address });
           return null;
         }).catch(function (error) {
           throw error;

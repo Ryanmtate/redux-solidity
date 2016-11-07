@@ -164,6 +164,39 @@ export default class StateEngine {
     });
   }
 
+  generateRawTx(_from, _to, _value, _gasLimit, _method, _params) {
+    return new Promise((resolve, reject) => {
+      let from = _from || this.eth.accounts[0];
+      let value = _value || 0;
+      let to = _to || this.contract.address;
+      let gasLimit = _gasLimit || 4712388;
+      if (!this.contract[_method] || !_params) {
+        let error = new Error('Invalid Contract Method or Parameters');
+        reject(error);
+      } else {
+        let data = this.contract[method].getData(..._params);
+        Promise.resolve([
+          this.eth.getGasPriceAsync(),
+          this.eth.getTransactionCountAsync(_from)
+        ]).spread((gasPrice, nonce) => {
+          let rawTx = {
+            from,
+            to,
+            value,
+            data,
+            gasLimit,
+            nonce: Number(nonce.toString()),
+            gasPrice: Number(gasPrice.toString()),
+          };
+
+          resolve(rawTx);
+        }).catch((error) => {
+          reject(error);
+        });
+      }
+    });
+  }
+
   sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey) {
     return new Promise((resolve, reject) => {
       if (!_from || !_data) {
