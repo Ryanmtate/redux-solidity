@@ -32,7 +32,6 @@ export default class DeployEngine extends StateEngine {
       }).then(() => {
         return solc.compile({sources: sources}, 1);
       }).then((compiled) => {
-        console.log('compiled', compiled);
         if(!compiled.contracts){
           reject(compiled);
         } else {
