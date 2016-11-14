@@ -283,7 +283,6 @@ var StateEngine = function () {
           var pkey = new Buffer(_privateKey, 'hex');
 
           tx.sign(pkey);
-          console.log('tx', tx.toString());
           var serialized = tx.serialize();
           return _this9.eth.sendRawTransactionAsync('0x' + serialized.toString('hex'));
         }).then(function (result) {

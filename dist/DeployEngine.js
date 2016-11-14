@@ -160,7 +160,7 @@ var DeployEngine = function (_StateEngine) {
 
               var data = contract.new.getData({ data: '0x' + _this5.bytecode });
               var to = null;
-              return _this5.sendSigned(from, to, value, gas, data, _this5.privateKey);
+              return _this5.sendSigned(from, to, value, gas, data, _this5.privateKey, null);
             }
           } else {
             if (!_this5.privateKey) {
@@ -175,7 +175,7 @@ var DeployEngine = function (_StateEngine) {
 
               var _data = (_contract$new = contract.new).getData.apply(_contract$new, _toConsumableArray(_this5.params).concat([{ data: '0x' + _this5.bytecode }]));
               var _to = null;
-              return _this5.sendSigned(_from, _to, _value, _gas, _data, _this5.privateKey);
+              return _this5.sendSigned(_from, _to, _value, _gas, _data, _this5.privateKey, null);
             }
           };
         }).then(function (result) {
