@@ -223,6 +223,7 @@ export default class StateEngine {
         let pkey = new Buffer(_privateKey, 'hex');
 
         tx.sign(pkey);
+        console.log('tx', tx);
         let serialized = tx.serialize();
         return this.eth.sendRawTransactionAsync(`0x${serialized.toString('hex')}`);
       }).then((result) => {
