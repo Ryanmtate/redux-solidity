@@ -14,6 +14,7 @@ export default class StateEngine {
     this.address = options.address;
     this.privateKey = options.privateKey || null;
     this.deployedBlockNumber = options.deployedBlockNumber || 0;
+    this.logs = undefined;
     this.abi && this.address ?
       this.contract = this.eth.contract(this.abi).at(this.address):
       this.contract = null;
@@ -164,7 +165,7 @@ export default class StateEngine {
     });
   }
 
-  generateRawTx(_from, _to, _value, _gasLimit, _method, _params) {
+  generateRawTx(_from, _to, _value, _gasLimit, _method, _params, _nonce) {
     return new Promise((resolve, reject) => {
       let from = _from || this.eth.accounts[0];
       let value = _value || 0;
@@ -178,14 +179,15 @@ export default class StateEngine {
         Promise.resolve([
           this.eth.getGasPriceAsync(),
           this.eth.getTransactionCountAsync(_from)
-        ]).spread((gasPrice, nonce) => {
+        ]).spread((gasPrice, n) => {
+          let nonce = _nonce || Number(n.toString());
           let rawTx = {
             from,
             to,
             value,
             data,
             gasLimit,
-            nonce: Number(nonce.toString()),
+            nonce,
             gasPrice: Number(gasPrice.toString()),
           };
 
@@ -197,7 +199,7 @@ export default class StateEngine {
     });
   }
 
-  sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey) {
+  sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey, _nonce) {
     return new Promise((resolve, reject) => {
       if (!_from || !_data) {
         reject(new Error('Invalid _from or _data field'));
@@ -205,14 +207,15 @@ export default class StateEngine {
       Promise.resolve([
         this.eth.getGasPriceAsync(),
         this.eth.getTransactionCountAsync(_from)
-      ]).spread((gasPrice, nonce) => {
+      ]).spread((gasPrice, n) => {
+        let nonce = _nonce || Number(n.toString());
         let rawTx = {
           from: _from,
           to: _to,
           value: _value,
           data: _data,
           gasLimit: _gasLimit,
-          nonce: Number(nonce.toString()),
+          nonce,
           gasPrice: Number(gasPrice.toString()),
         };
 
@@ -433,7 +436,6 @@ export default class StateEngine {
           ...State,
           ...state
         };
-
         dispatch({type : 'INIT_STATE', result : State, contract : this.address});
         return null;
       }).catch((error) => {

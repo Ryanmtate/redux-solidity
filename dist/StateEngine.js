@@ -43,6 +43,7 @@ var StateEngine = function () {
     this.address = options.address;
     this.privateKey = options.privateKey || null;
     this.deployedBlockNumber = options.deployedBlockNumber || 0;
+    this.logs = undefined;
     this.abi && this.address ? this.contract = this.eth.contract(this.abi).at(this.address) : this.contract = null;
     this.contract ? this.events = this.contract.allEvents({ fromBlock: this.deployedBlockNumber, toBlock: 'latest' }) : null;
   }
@@ -221,7 +222,7 @@ var StateEngine = function () {
     }
   }, {
     key: 'generateRawTx',
-    value: function generateRawTx(_from, _to, _value, _gasLimit, _method, _params) {
+    value: function generateRawTx(_from, _to, _value, _gasLimit, _method, _params, _nonce) {
       var _this8 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
@@ -237,14 +238,15 @@ var StateEngine = function () {
             var _contract$_method;
 
             var data = (_contract$_method = _this8.contract[_method]).getData.apply(_contract$_method, _toConsumableArray(_params));
-            _bluebird2.default.resolve([_this8.eth.getGasPriceAsync(), _this8.eth.getTransactionCountAsync(_from)]).spread(function (gasPrice, nonce) {
+            _bluebird2.default.resolve([_this8.eth.getGasPriceAsync(), _this8.eth.getTransactionCountAsync(_from)]).spread(function (gasPrice, n) {
+              var nonce = _nonce || Number(n.toString());
               var rawTx = {
                 from: from,
                 to: to,
                 value: value,
                 data: data,
                 gasLimit: gasLimit,
-                nonce: Number(nonce.toString()),
+                nonce: nonce,
                 gasPrice: Number(gasPrice.toString())
               };
 
@@ -258,21 +260,22 @@ var StateEngine = function () {
     }
   }, {
     key: 'sendSigned',
-    value: function sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey) {
+    value: function sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey, _nonce) {
       var _this9 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
         if (!_from || !_data) {
           reject(new Error('Invalid _from or _data field'));
         };
-        _bluebird2.default.resolve([_this9.eth.getGasPriceAsync(), _this9.eth.getTransactionCountAsync(_from)]).spread(function (gasPrice, nonce) {
+        _bluebird2.default.resolve([_this9.eth.getGasPriceAsync(), _this9.eth.getTransactionCountAsync(_from)]).spread(function (gasPrice, n) {
+          var nonce = _nonce || Number(n.toString());
           var rawTx = {
             from: _from,
             to: _to,
             value: _value,
             data: _data,
             gasLimit: _gasLimit,
-            nonce: Number(nonce.toString()),
+            nonce: nonce,
             gasPrice: Number(gasPrice.toString())
           };
 
@@ -491,7 +494,6 @@ var StateEngine = function () {
           return _this15.getState();
         }).then(function (state) {
           State = _extends({}, State, state);
-
           dispatch({ type: 'INIT_STATE', result: State, contract: _this15.address });
           return null;
         }).catch(function (error) {
