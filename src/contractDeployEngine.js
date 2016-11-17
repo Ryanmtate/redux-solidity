@@ -13,7 +13,7 @@ export default class DeployEngine extends StateEngine {
     this.contractDir = options.contractDir || `${process.cwd()}/contracts`;
     this.deployedDir = options.deployedDir || `${process.cwd()}/deployed`;
     this.compiledDir = options.compiledDir || `${process.cwd()}/compiled`;
-    this.compiled = options.compiled || {};
+    this.compiled = options.compiled || null;
     this.fileName = options.fileName || options.contractName;
     this.deployed = {};
     this.params = options.params;
