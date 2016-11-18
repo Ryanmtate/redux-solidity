@@ -42,7 +42,7 @@ var DeployEngine = function (_StateEngine) {
   function DeployEngine(options) {
     _classCallCheck(this, DeployEngine);
 
-    var _this = _possibleConstructorReturn(this, (DeployEngine.__proto__ || Object.getPrototypeOf(DeployEngine)).call(this, options));
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DeployEngine).call(this, options));
 
     _this.contractDir = options.contractDir || process.cwd() + '/contracts';
     _this.deployedDir = options.deployedDir || process.cwd() + '/deployed';
@@ -113,10 +113,8 @@ var DeployEngine = function (_StateEngine) {
       return new _bluebird2.default(function (resolve, reject) {
         _bluebird2.default.resolve(fs.existsSync(_this4.compiledDir + '/compiled.json')).then(function (exists) {
           if (!exists) {
-            console.log('compiled.json does not exists');
             _this4.compiled ? resolve(_this4.compiled) : resolve(null);
           } else {
-            console.log('compiled.json exists');
             return jsonfile.readFileAsync(_this4.compiledDir + '/compiled.json');
           }
         }).then(function (compiled) {
@@ -138,15 +136,11 @@ var DeployEngine = function (_StateEngine) {
         _this5.deployed = new Object();
         _this5.getCompiled().then(function (compiled) {
           if (!compiled) {
-            console.log('Compiling');
             return _this5.compile();
           } else {
-            console.log('Found compiled');
             return compiled;
           }
         }).then(function (compiled) {
-          console.log("FINNA DIE");
-          console.log(compiled);
           _this5.deployed = compiled['contracts'][_this5.contractName];
           _this5.abi = JSON.parse(compiled['contracts'][_this5.contractName]['interface']);
           return _this5.linkBytecode(compiled['contracts'][_this5.contractName]['bytecode']);
@@ -159,10 +153,10 @@ var DeployEngine = function (_StateEngine) {
             if (!_this5.privateKey) {
               return contract.new(_this5.sendObject);
             } else {
-              var _sendObject = _this5.sendObject,
-                  from = _sendObject.from,
-                  value = _sendObject.value,
-                  gas = _sendObject.gas;
+              var _sendObject = _this5.sendObject;
+              var from = _sendObject.from;
+              var value = _sendObject.value;
+              var gas = _sendObject.gas;
 
               var data = contract.new.getData({ data: '0x' + _this5.bytecode });
               var to = null;
@@ -174,10 +168,10 @@ var DeployEngine = function (_StateEngine) {
             } else {
               var _contract$new;
 
-              var _sendObject2 = _this5.sendObject,
-                  _from = _sendObject2.from,
-                  _value = _sendObject2.value,
-                  _gas = _sendObject2.gas;
+              var _sendObject2 = _this5.sendObject;
+              var _from = _sendObject2.from;
+              var _value = _sendObject2.value;
+              var _gas = _sendObject2.gas;
 
               var _data = (_contract$new = contract.new).getData.apply(_contract$new, _toConsumableArray(_this5.params).concat([{ data: '0x' + _this5.bytecode }]));
               var _to = null;
