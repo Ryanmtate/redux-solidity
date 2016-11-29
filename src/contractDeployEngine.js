@@ -26,6 +26,9 @@ export default class DeployEngine extends StateEngine {
       fs.readdirAsync(`${this.contractDir}`).map((file) => {
         if(file.match(RegExp(".sol"))){
           return join(file, fs.readFileAsync(`${this.contractDir}/${file}`, `utf-8`), (file, src) => {
+            if (file == "SGrid.sol") {
+              console.log(src);
+            }
             sources[file] = src;
           });
         }

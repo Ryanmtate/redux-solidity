@@ -65,6 +65,9 @@ var DeployEngine = function (_StateEngine) {
         fs.readdirAsync('' + _this2.contractDir).map(function (file) {
           if (file.match(RegExp(".sol"))) {
             return join(file, fs.readFileAsync(_this2.contractDir + '/' + file, 'utf-8'), function (file, src) {
+              if (file == "SGrid.sol") {
+                console.log(src);
+              }
               sources[file] = src;
             });
           }
