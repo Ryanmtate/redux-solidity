@@ -1,6 +1,6 @@
 {
   "name": "redux-solidity",
-  "version": "0.7.371",
+  "version": "0.7.372",
   "description": "Solidity contract Compile, Deploy, Redux State Engine Utilities",
   "main": "dist/index.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "bluebird": "^3.4.1",
     "ethereumjs-tx": "^1.1.2",
     "jsonfile": "^2.3.1",
-    "solc": "^0.4.2",
+    "solc": "^0.4.6",
     "web3": "^0.17.0-alpha"
   },
   "devDependencies": {
