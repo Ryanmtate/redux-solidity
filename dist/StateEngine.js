@@ -40,6 +40,7 @@ var StateEngine = function () {
     this.contractName = options.contractName;
     this.sendObject = options.sendObject;
     this.abi = options.abi;
+    this.bytecode = options.bytecode;
     this.address = options.address;
     this.privateKey = options.privateKey || null;
     this.deployedBlockNumber = options.deployedBlockNumber || 0;
