@@ -9,7 +9,7 @@ export default class StateEngine {
     this.web3 = options.web3;
     this.eth = Promise.promisifyAll(options['web3']['eth']);
     this.contractName = options.contractName;
-    this.sendObject = options.sendObject;
+    this.sendObject = options.sendObject || { from: null, to: null, value: 0, gas: 4712388 };
     this.abi = options.abi;
     this.bytecode = options.bytecode;
     this.address = options.address;
@@ -17,7 +17,7 @@ export default class StateEngine {
     this.deployedBlockNumber = options.deployedBlockNumber || 0;
     this.logs = undefined;
     this.abi && this.address ?
-      this.contract = this.eth.contract(this.abi).at(this.address):
+      this.contract = this.eth.contract(this.abi).at(this.address) :
       this.contract = null;
     this.contract ?
       this.events = this.contract.allEvents({fromBlock : this.deployedBlockNumber, toBlock : 'latest'}) :
@@ -385,7 +385,7 @@ export default class StateEngine {
         return this.abi;
       }).map((abi) => {
         if(this.contract[abi['name']] && this.contract[abi['name']]['callAsync'] && abi['inputs'].length == 0){
-          return join(abi['name'], this.contract[abi['name']].callAsync(), (name, state) => {
+          return join(abi['name'], this.contract[abi['name']].callAsync(this.sendObject), (name, state) => {
             State[name] = state;
           });
         }

@@ -38,7 +38,7 @@ var StateEngine = function () {
     this.web3 = options.web3;
     this.eth = _bluebird2.default.promisifyAll(options['web3']['eth']);
     this.contractName = options.contractName;
-    this.sendObject = options.sendObject;
+    this.sendObject = options.sendObject || { from: null, to: null, value: 0, gas: 4712388 };
     this.abi = options.abi;
     this.bytecode = options.bytecode;
     this.address = options.address;
@@ -441,7 +441,7 @@ var StateEngine = function () {
           return _this13.abi;
         }).map(function (abi) {
           if (_this13.contract[abi['name']] && _this13.contract[abi['name']]['callAsync'] && abi['inputs'].length == 0) {
-            return join(abi['name'], _this13.contract[abi['name']].callAsync(), function (name, state) {
+            return join(abi['name'], _this13.contract[abi['name']].callAsync(_this13.sendObject), function (name, state) {
               State[name] = state;
             });
           }
