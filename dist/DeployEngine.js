@@ -133,6 +133,7 @@ var DeployEngine = function (_StateEngine) {
       var _this5 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
+        var nonce = _nonce || null;
         _this5.deployed = new Object();
         _this5.getCompiled().then(function (compiled) {
           if (!compiled) {
@@ -160,7 +161,7 @@ var DeployEngine = function (_StateEngine) {
 
               var data = contract.new.getData({ data: '0x' + _this5.bytecode });
               var to = null;
-              return _this5.sendSigned(from, to, value, gas, data, _this5.privateKey, _nonce);
+              return _this5.sendSigned(from, to, value, gas, data, _this5.privateKey, nonce);
             }
           } else {
             if (!_this5.privateKey) {
@@ -175,7 +176,7 @@ var DeployEngine = function (_StateEngine) {
 
               var _data = (_contract$new = contract.new).getData.apply(_contract$new, _toConsumableArray(_this5.params).concat([{ data: '0x' + _this5.bytecode }]));
               var _to = null;
-              return _this5.sendSigned(_from, _to, _value, _gas, _data, _this5.privateKey, _nonce);
+              return _this5.sendSigned(_from, _to, _value, _gas, _data, _this5.privateKey, nonce);
             }
           };
         }).then(function (result) {
