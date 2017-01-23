@@ -83,8 +83,9 @@ export default class DeployEngine extends StateEngine {
     });
   }
 
-  deploy() {
+  deploy(_nonce) {
     return new Promise((resolve, reject) => {
+      let nonce = _nonce || null;
       this.deployed = new Object();
       this.getCompiled().then((compiled) => {
         if (!compiled) {
@@ -108,7 +109,7 @@ export default class DeployEngine extends StateEngine {
             const { from, value, gas } = this.sendObject;
             let data = contract.new.getData({data : `0x${this.bytecode}`});
             let to = null;
-            return this.sendSigned(from, to, value, gas, data, this.privateKey, null);
+            return this.sendSigned(from, to, value, gas, data, this.privateKey, nonce);
           }
         } else {
           if (!this.privateKey) {
@@ -117,7 +118,7 @@ export default class DeployEngine extends StateEngine {
             const { from, value, gas } = this.sendObject;
             let data = contract.new.getData(...this.params, {data : `0x${this.bytecode}`});
             let to = null;
-            return this.sendSigned(from, to, value, gas, data, this.privateKey, null);
+            return this.sendSigned(from, to, value, gas, data, this.privateKey, nonce);
           }
         };
       }).then((result) => {
