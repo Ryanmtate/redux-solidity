@@ -169,6 +169,8 @@ export default class DeployEngine extends StateEngine {
           };
           return jsonfile.writeFileAsync(`${this.deployedDir}/${this.fileName}.deployedLite.json`, lite);
         };
+      }).then(() => {
+        resolve(true);
       }).catch((error) => {
         reject(error);
       });

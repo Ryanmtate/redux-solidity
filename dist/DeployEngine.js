@@ -230,6 +230,8 @@ var DeployEngine = function (_StateEngine) {
             };
             return jsonfile.writeFileAsync(_this6.deployedDir + '/' + _this6.fileName + '.deployedLite.json', _lite2);
           };
+        }).then(function () {
+          resolve(true);
         }).catch(function (error) {
           reject(error);
         });
