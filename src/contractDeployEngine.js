@@ -163,7 +163,7 @@ export default class DeployEngine extends StateEngine {
           resolve(true);
         } else {
           let lite = {
-            abi: JSON.parse(this.deployed['interface']),
+            interface: this.deployed['interface'],
             bytecode: this.bytecode,
             txReceipt: this.deployed['txReceipt']
           };

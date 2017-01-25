@@ -224,7 +224,7 @@ var DeployEngine = function (_StateEngine) {
             resolve(true);
           } else {
             var _lite2 = {
-              abi: JSON.parse(_this6.deployed['interface']),
+              interface: _this6.deployed['interface'],
               bytecode: _this6.bytecode,
               txReceipt: _this6.deployed['txReceipt']
             };
