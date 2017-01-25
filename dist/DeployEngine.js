@@ -228,8 +228,6 @@ var DeployEngine = function (_StateEngine) {
               bytecode: _this6.bytecode,
               txReceipt: _this6.deployed['txReceipt']
             };
-
-            console.log('lite', _lite2);
             return jsonfile.writeFileAsync(_this6.deployedDir + '/' + _this6.fileName + '.deployedLite.json', _lite2);
           };
         }).then(function () {
