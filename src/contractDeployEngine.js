@@ -83,10 +83,10 @@ export default class DeployEngine extends StateEngine {
     });
   }
 
-  deploy(_nonce, _liteObject) {
+  deploy(_nonce, _lite) {
     return new Promise((resolve, reject) => {
       let nonce = _nonce || null;
-      let liteObject = _liteObject || false;
+      let lite = _lite || false;
       this.deployed = new Object();
       this.getCompiled().then((compiled) => {
         if (!compiled) {
@@ -134,7 +134,7 @@ export default class DeployEngine extends StateEngine {
         this.deployed['bytecode'] = this.bytecode;
         this.deployed['runtimeBytecode'] = this.bytecode;
         this.address = txReceipt['contractAddress'];
-        return this.saveDeployed(liteObject);
+        return this.saveDeployed(lite);
       }).then((saved) => {
         this.contract = this.eth.contract(this.abi).at(this.address);
         return this.promisify();
@@ -147,9 +147,9 @@ export default class DeployEngine extends StateEngine {
     })
   }
 
-  saveDeployed(_liteObject) {
+  saveDeployed(_lite) {
     return new Promise((resolve, reject) => {
-      let liteObject = _liteObject || false;
+      let lite = _lite || false;
       Promise.delay(500, fs.existsSync(`${this.deployedDir}`)).then((exists) => {
         if(!exists){
           return fs.mkdirAsync(`${this.deployedDir}`);
@@ -159,7 +159,7 @@ export default class DeployEngine extends StateEngine {
       }).then(() => {
         return jsonfile.writeFileAsync(`${this.deployedDir}/${this.fileName}.deployed.json`, this.deployed);
       }).then(() => {
-        if (!liteObject) {
+        if (!lite) {
           resolve(true);
         } else {
           let lite = {
