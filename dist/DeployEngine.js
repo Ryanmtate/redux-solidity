@@ -129,11 +129,12 @@ var DeployEngine = function (_StateEngine) {
     }
   }, {
     key: 'deploy',
-    value: function deploy(_nonce) {
+    value: function deploy(_nonce, _liteObject) {
       var _this5 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
         var nonce = _nonce || null;
+        var liteObject = _liteObject || false;
         _this5.deployed = new Object();
         _this5.getCompiled().then(function (compiled) {
           if (!compiled) {
@@ -180,6 +181,7 @@ var DeployEngine = function (_StateEngine) {
             }
           };
         }).then(function (result) {
+          //
           if (!result['transactionHash']) {
             return _this5.getTransactionReceipt(result);
           } else {
@@ -190,7 +192,7 @@ var DeployEngine = function (_StateEngine) {
           _this5.deployed['bytecode'] = _this5.bytecode;
           _this5.deployed['runtimeBytecode'] = _this5.bytecode;
           _this5.address = txReceipt['contractAddress'];
-          return _this5.saveDeployed();
+          return _this5.saveDeployed(liteObject);
         }).then(function (saved) {
           _this5.contract = _this5.eth.contract(_this5.abi).at(_this5.address);
           return _this5.promisify();
@@ -204,10 +206,11 @@ var DeployEngine = function (_StateEngine) {
     }
   }, {
     key: 'saveDeployed',
-    value: function saveDeployed() {
+    value: function saveDeployed(_liteObject) {
       var _this6 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
+        var liteObject = _liteObject || false;
         _bluebird2.default.delay(500, fs.existsSync('' + _this6.deployedDir)).then(function (exists) {
           if (!exists) {
             return fs.mkdirAsync('' + _this6.deployedDir);
@@ -217,7 +220,16 @@ var DeployEngine = function (_StateEngine) {
         }).then(function () {
           return jsonfile.writeFileAsync(_this6.deployedDir + '/' + _this6.fileName + '.deployed.json', _this6.deployed);
         }).then(function () {
-          resolve(true);
+          if (!liteObject) {
+            resolve(true);
+          } else {
+            var lite = {
+              abi: JSON.parse(_this6.deployed['interface']),
+              bytecode: _this6.bytecode,
+              txReceipt: _this6.deployed['txReceipt']
+            };
+            return jsonfile.writeFileAsync(_this6.deployedDir + '/' + _this6.fileName + '.deployed.json', lite);
+          };
         }).catch(function (error) {
           reject(error);
         });

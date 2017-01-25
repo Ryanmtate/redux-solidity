@@ -83,9 +83,10 @@ export default class DeployEngine extends StateEngine {
     });
   }
 
-  deploy(_nonce) {
+  deploy(_nonce, _liteObject) {
     return new Promise((resolve, reject) => {
       let nonce = _nonce || null;
+      let liteObject = _liteObject || false;
       this.deployed = new Object();
       this.getCompiled().then((compiled) => {
         if (!compiled) {
@@ -122,6 +123,7 @@ export default class DeployEngine extends StateEngine {
           }
         };
       }).then((result) => {
+        //
         if (!result['transactionHash']) {
           return this.getTransactionReceipt(result);
         } else {
@@ -132,7 +134,7 @@ export default class DeployEngine extends StateEngine {
         this.deployed['bytecode'] = this.bytecode;
         this.deployed['runtimeBytecode'] = this.bytecode;
         this.address = txReceipt['contractAddress'];
-        return this.saveDeployed();
+        return this.saveDeployed(liteObject);
       }).then((saved) => {
         this.contract = this.eth.contract(this.abi).at(this.address);
         return this.promisify();
@@ -145,8 +147,9 @@ export default class DeployEngine extends StateEngine {
     })
   }
 
-  saveDeployed() {
+  saveDeployed(_liteObject) {
     return new Promise((resolve, reject) => {
+      let liteObject = _liteObject || false;
       Promise.delay(500, fs.existsSync(`${this.deployedDir}`)).then((exists) => {
         if(!exists){
           return fs.mkdirAsync(`${this.deployedDir}`);
@@ -156,11 +159,19 @@ export default class DeployEngine extends StateEngine {
       }).then(() => {
         return jsonfile.writeFileAsync(`${this.deployedDir}/${this.fileName}.deployed.json`, this.deployed);
       }).then(() => {
-        resolve(true);
+        if (!liteObject) {
+          resolve(true);
+        } else {
+          let lite = {
+            abi: JSON.parse(this.deployed['interface']),
+            bytecode: this.bytecode,
+            txReceipt: this.deployed['txReceipt']
+          };
+          return jsonfile.writeFileAsync(`${this.deployedDir}/${this.fileName}.deployed.json`, lite);
+        };
       }).catch((error) => {
         reject(error);
       });
-
     });
   }
 
