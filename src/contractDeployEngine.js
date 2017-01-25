@@ -163,10 +163,12 @@ export default class DeployEngine extends StateEngine {
           resolve(true);
         } else {
           let lite = {
-            interface: this.deployed['interface'],
+            interface: JSON.stringify(this.abi),
             bytecode: this.bytecode,
             txReceipt: this.deployed['txReceipt']
           };
+
+          console.log('lite', lite);
           return jsonfile.writeFileAsync(`${this.deployedDir}/${this.fileName}.deployedLite.json`, lite);
         };
       }).then(() => {

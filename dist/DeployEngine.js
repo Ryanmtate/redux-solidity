@@ -224,10 +224,12 @@ var DeployEngine = function (_StateEngine) {
             resolve(true);
           } else {
             var _lite2 = {
-              interface: _this6.deployed['interface'],
+              interface: JSON.stringify(_this6.abi),
               bytecode: _this6.bytecode,
               txReceipt: _this6.deployed['txReceipt']
             };
+
+            console.log('lite', _lite2);
             return jsonfile.writeFileAsync(_this6.deployedDir + '/' + _this6.fileName + '.deployedLite.json', _lite2);
           };
         }).then(function () {
