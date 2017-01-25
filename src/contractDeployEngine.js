@@ -167,7 +167,7 @@ export default class DeployEngine extends StateEngine {
             bytecode: this.bytecode,
             txReceipt: this.deployed['txReceipt']
           };
-          return jsonfile.writeFileAsync(`${this.deployedDir}/${this.fileName}.deployed.json`, lite);
+          return jsonfile.writeFileAsync(`${this.deployedDir}/${this.fileName}.deployedLite.json`, lite);
         };
       }).catch((error) => {
         reject(error);
