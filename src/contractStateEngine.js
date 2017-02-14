@@ -22,6 +22,7 @@ export default class StateEngine {
     this.contract ?
       this.events = this.contract.allEvents({fromBlock : this.deployedBlockNumber, toBlock : 'latest'}) :
       null;
+    this.timeout = 0 || options.timeout;
   }
 
 
@@ -205,10 +206,14 @@ export default class StateEngine {
       if (!_from || !_data) {
         reject(new Error('Invalid _from or _data field'));
       };
-      Promise.resolve([
-        this.eth.getGasPriceAsync(),
-        this.eth.getTransactionCountAsync(_from)
-      ]).spread((gasPrice, n) => {
+      Promise.delay(this.timeout)
+      .then(() => {
+        return Promise.resolve([
+          this.eth.getGasPriceAsync(),
+          this.eth.getTransactionCountAsync(_from)
+        ])
+      })
+      .spread((gasPrice, n) => {
         let nonce = _nonce || Number(n.toString());
         let rawTx = {
           from: _from,

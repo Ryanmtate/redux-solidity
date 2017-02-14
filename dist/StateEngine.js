@@ -47,6 +47,7 @@ var StateEngine = function () {
     this.logs = undefined;
     this.abi && this.address ? this.contract = this.eth.contract(this.abi).at(this.address) : this.contract = null;
     this.contract ? this.events = this.contract.allEvents({ fromBlock: this.deployedBlockNumber, toBlock: 'latest' }) : null;
+    this.timeout = 0 || options.timeout;
   }
 
   _createClass(StateEngine, [{
@@ -268,7 +269,9 @@ var StateEngine = function () {
         if (!_from || !_data) {
           reject(new Error('Invalid _from or _data field'));
         };
-        _bluebird2.default.resolve([_this9.eth.getGasPriceAsync(), _this9.eth.getTransactionCountAsync(_from)]).spread(function (gasPrice, n) {
+        _bluebird2.default.delay(_this9.timeout).then(function () {
+          return _bluebird2.default.resolve([_this9.eth.getGasPriceAsync(), _this9.eth.getTransactionCountAsync(_from)]);
+        }).spread(function (gasPrice, n) {
           var nonce = _nonce || Number(n.toString());
           var rawTx = {
             from: _from,
@@ -389,7 +392,7 @@ var StateEngine = function () {
   }, {
     key: 'reducer',
     value: function reducer() {
-      var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+      var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var action = arguments[1];
 
       switch (action.type) {
