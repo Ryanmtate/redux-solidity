@@ -22,6 +22,7 @@ export default class StateEngine {
     this.contract ?
       this.events = this.contract.allEvents({fromBlock : this.deployedBlockNumber, toBlock : 'latest'}) :
       null;
+    this.txnTimeout = 0 || options.txnTimeout;  // Default timeout for sending a signed txn
   }
 
 
@@ -200,15 +201,22 @@ export default class StateEngine {
     });
   }
 
-  sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey, _nonce) {
+  sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey, _nonce, _delay) {
     return new Promise((resolve, reject) => {
       if (!_from || !_data) {
         reject(new Error('Invalid _from or _data field'));
       };
-      Promise.resolve([
-        this.eth.getGasPriceAsync(),
-        this.eth.getTransactionCountAsync(_from)
-      ]).spread((gasPrice, n) => {
+      // Option to override default delay if one is specified
+      let delay = _delay || this.txnTimeout;
+
+      Promise.delay(this.txnTimeout)
+      .then(() => {
+        return Promise.resolve([
+          this.eth.getGasPriceAsync(),
+          this.eth.getTransactionCountAsync(_from)
+        ])
+      })
+      .spread((gasPrice, n) => {
         let nonce = _nonce || Number(n.toString());
         let rawTx = {
           from: _from,

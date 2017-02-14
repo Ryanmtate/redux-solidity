@@ -47,6 +47,7 @@ var StateEngine = function () {
     this.logs = undefined;
     this.abi && this.address ? this.contract = this.eth.contract(this.abi).at(this.address) : this.contract = null;
     this.contract ? this.events = this.contract.allEvents({ fromBlock: this.deployedBlockNumber, toBlock: 'latest' }) : null;
+    this.txnTimeout = 0 || options.txnTimeout; // Default timeout for sending a signed txn
   }
 
   _createClass(StateEngine, [{
@@ -261,14 +262,19 @@ var StateEngine = function () {
     }
   }, {
     key: 'sendSigned',
-    value: function sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey, _nonce) {
+    value: function sendSigned(_from, _to, _value, _gasLimit, _data, _privateKey, _nonce, _delay) {
       var _this9 = this;
 
       return new _bluebird2.default(function (resolve, reject) {
         if (!_from || !_data) {
           reject(new Error('Invalid _from or _data field'));
         };
-        _bluebird2.default.resolve([_this9.eth.getGasPriceAsync(), _this9.eth.getTransactionCountAsync(_from)]).spread(function (gasPrice, n) {
+        // Option to override default delay if one is specified
+        var delay = _delay || _this9.txnTimeout;
+
+        _bluebird2.default.delay(_this9.txnTimeout).then(function () {
+          return _bluebird2.default.resolve([_this9.eth.getGasPriceAsync(), _this9.eth.getTransactionCountAsync(_from)]);
+        }).spread(function (gasPrice, n) {
           var nonce = _nonce || Number(n.toString());
           var rawTx = {
             from: _from,
@@ -389,7 +395,7 @@ var StateEngine = function () {
   }, {
     key: 'reducer',
     value: function reducer() {
-      var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+      var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var action = arguments[1];
 
       switch (action.type) {
