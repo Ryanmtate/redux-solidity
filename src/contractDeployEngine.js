@@ -100,7 +100,7 @@ export default class DeployEngine extends StateEngine {
         return this.linkBytecode(compiled['contracts'][`${this.contractName}.sol:${this.contractName}`]['bytecode']);
       }).then((bytecode) => {
         this.bytecode = bytecode;
-        this.sendObject['data'] = this.bytecode;
+        this.sendObject['data'] = `0x${this.bytecode}`;
         return this.eth.contract(this.abi);
       }).then((contract) => {
         if(typeof this.params == 'undefined' || this.params.length == 0){
@@ -114,6 +114,7 @@ export default class DeployEngine extends StateEngine {
           }
         } else {
           if (!this.privateKey) {
+            conole.log('...this.params, this.sendObject', ...this.params, this.sendObject);
             return contract.new(...this.params, this.sendObject);
           } else {
             const { from, value, gas } = this.sendObject;
