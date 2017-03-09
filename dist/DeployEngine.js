@@ -197,9 +197,8 @@ var DeployEngine = function (_StateEngine) {
           _this5.contract = _this5.eth.contract(_this5.abi).at(_this5.address);
           return _this5.promisify();
         }).then(function (contract) {
-          console.log('contract', contract);
           _this5.contract = contract;
-          resolve(_this5.contract);
+          resolve(contract);
         }).catch(function (error) {
           reject(error);
         });

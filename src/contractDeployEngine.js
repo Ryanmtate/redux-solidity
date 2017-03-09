@@ -139,9 +139,8 @@ export default class DeployEngine extends StateEngine {
         this.contract = this.eth.contract(this.abi).at(this.address);
         return this.promisify();
       }).then((contract) => {
-        console.log('contract', contract);
         this.contract = contract;
-        resolve(this.contract);
+        resolve(contract);
       }).catch((error) => {
         reject(error);
       });
