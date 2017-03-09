@@ -114,7 +114,7 @@ export default class DeployEngine extends StateEngine {
           }
         } else {
           if (!this.privateKey) {
-            conole.log('...this.params, this.sendObject', ...this.params, this.sendObject);
+            console.log('...this.params, this.sendObject', ...this.params, this.sendObject);
             return contract.new(...this.params, this.sendObject);
           } else {
             const { from, value, gas } = this.sendObject;
