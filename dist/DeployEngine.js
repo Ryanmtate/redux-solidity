@@ -119,8 +119,8 @@ var DeployEngine = function (_StateEngine) {
           }
         }).then(function (compiled) {
           _this4.compiled = compiled;
-          _this4.abi = JSON.parse(compiled['contracts'][_this4.contractName]['interface']);
-          _this4.bytecode = compiled['contracts'][_this4.contractName]['bytecode'];
+          _this4.abi = JSON.parse(compiled['contracts'][_this4.contractName + '.sol:' + _this4.contractName]['interface']);
+          _this4.bytecode = compiled['contracts'][_this4.contractName + '.sol:' + _this4.contractName]['bytecode'];
           resolve(compiled);
         }).catch(function (error) {
           reject(error);

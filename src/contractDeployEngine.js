@@ -74,8 +74,8 @@ export default class DeployEngine extends StateEngine {
         }
       }).then((compiled) => {
         this.compiled = compiled;
-        this.abi = JSON.parse(compiled['contracts'][this.contractName]['interface']);
-        this.bytecode = compiled['contracts'][this.contractName]['bytecode'];
+        this.abi = JSON.parse(compiled['contracts'][`${this.contractName}.sol:${this.contractName}`]['interface']);
+        this.bytecode = compiled['contracts'][`${this.contractName}.sol:${this.contractName}`]['bytecode'];
         resolve(compiled);
       }).catch((error) => {
         reject(error);
