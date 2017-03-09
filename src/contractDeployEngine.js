@@ -96,8 +96,8 @@ export default class DeployEngine extends StateEngine {
         }
       }).then((compiled) => {
         this.deployed = compiled['contracts'][this.contractName];
-        this.abi = JSON.parse(compiled['contracts'][this.contractName]['interface']);
-        return this.linkBytecode(compiled['contracts'][this.contractName]['bytecode']);
+        this.abi = JSON.parse(compiled['contracts'][`${this.contractName}.sol:${this.contractName}`]['interface']);
+        return this.linkBytecode(compiled['contracts'][`${this.contractName}.sol:${this.contractName}`]['bytecode']);
       }).then((bytecode) => {
         this.bytecode = bytecode;
         this.sendObject['data'] = this.bytecode;

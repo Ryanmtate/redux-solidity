@@ -144,8 +144,8 @@ var DeployEngine = function (_StateEngine) {
           }
         }).then(function (compiled) {
           _this5.deployed = compiled['contracts'][_this5.contractName];
-          _this5.abi = JSON.parse(compiled['contracts'][_this5.contractName]['interface']);
-          return _this5.linkBytecode(compiled['contracts'][_this5.contractName]['bytecode']);
+          _this5.abi = JSON.parse(compiled['contracts'][_this5.contractName + '.sol:' + _this5.contractName]['interface']);
+          return _this5.linkBytecode(compiled['contracts'][_this5.contractName + '.sol:' + _this5.contractName]['bytecode']);
         }).then(function (bytecode) {
           _this5.bytecode = bytecode;
           _this5.sendObject['data'] = _this5.bytecode;
