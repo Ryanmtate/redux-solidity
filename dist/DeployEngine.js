@@ -143,7 +143,7 @@ var DeployEngine = function (_StateEngine) {
             return compiled;
           }
         }).then(function (compiled) {
-          _this5.deployed = compiled['contracts'][_this5.contractName];
+          _this5.deployed = compiled['contracts'][_this5.contractName + '.sol:' + _this5.contractName];
           _this5.abi = JSON.parse(compiled['contracts'][_this5.contractName + '.sol:' + _this5.contractName]['interface']);
           return _this5.linkBytecode(compiled['contracts'][_this5.contractName + '.sol:' + _this5.contractName]['bytecode']);
         }).then(function (bytecode) {
@@ -166,9 +166,6 @@ var DeployEngine = function (_StateEngine) {
             }
           } else {
             if (!_this5.privateKey) {
-              var _console;
-
-              (_console = console).log.apply(_console, ['...this.params, this.sendObject'].concat(_toConsumableArray(_this5.params), [_this5.sendObject]));
               return contract.new.apply(contract, _toConsumableArray(_this5.params).concat([_this5.sendObject]));
             } else {
               var _contract$new;

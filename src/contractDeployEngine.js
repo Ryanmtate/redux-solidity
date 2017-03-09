@@ -95,7 +95,7 @@ export default class DeployEngine extends StateEngine {
           return compiled;
         }
       }).then((compiled) => {
-        this.deployed = compiled['contracts'][this.contractName];
+        this.deployed = compiled['contracts'][`${this.contractName}.sol:${this.contractName}`];
         this.abi = JSON.parse(compiled['contracts'][`${this.contractName}.sol:${this.contractName}`]['interface']);
         return this.linkBytecode(compiled['contracts'][`${this.contractName}.sol:${this.contractName}`]['bytecode']);
       }).then((bytecode) => {
@@ -114,7 +114,6 @@ export default class DeployEngine extends StateEngine {
           }
         } else {
           if (!this.privateKey) {
-            console.log('...this.params, this.sendObject', ...this.params, this.sendObject);
             return contract.new(...this.params, this.sendObject);
           } else {
             const { from, value, gas } = this.sendObject;
